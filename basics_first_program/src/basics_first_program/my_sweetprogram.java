@@ -2,36 +2,36 @@ package basics_first_program;
 
 import java.util.Scanner;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.io.File;
+import java.util.ListIterator;
 import java.io.FileNotFoundException; 
+
+
 public class my_sweetprogram {
-
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Scanner in = new Scanner (new File ("src\\basics_first_program\\bros.txt"));
-		List<String> bros=new ArrayList<String>();
-		while (in.hasNext()){
-			bros.add(in.nextLine());
-		}
-		for ( String bro:bros) {
-			System.out.println("name: "+bro);
-		}
-		
-		/*
-		System.out.println("give us a size");
-		int size =in.nextInt();
+		LinkedList<String> names =new LinkedList<String>();
+		names.push("caelb");
+		names.push("kate");
+		names.push("nice");
+    	
+		ListIterator <String> it =names.listIterator();
+		it.next();
+		it.next();
+		it.add("susan");
 
-		int [] grades= new int [5];
-		System.out.println("enter "+size +" number one after the another");
-		for (int i=0;i<size;i++) {
-			grades[i]=in.nextInt();
-			}
-		for (int i=0;i<size;i++) {
-			System.out.print(grades[i]+" ");
-			
+		
+//		while (it.hasNext()) {
+//			System.out.println(it.next());
+//		}
+		for (String s : names) {
+			System.out.println(s);
 		}
-		*/
+
+//		System.out.println(it.next());
 	}
 
 }
