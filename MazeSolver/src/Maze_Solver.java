@@ -1,31 +1,27 @@
+//Get element for the array from a file as a string ,convert to a integer array by a line of code ,using for loop added the created array stream and add to maze object and finally added to arraylist mazes.
+
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.io.File;
+
 public class Maze_Solver {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
+		Maze m =new Maze();
 		ArrayList<Maze> mazes =new ArrayList<Maze>();
-		Maze m=new Maze();
-		Maze n =new Maze();
-		int [][] maze = {
-				{2,1,1,1},
-				{0,0,1,1},
-				{0,0,0,1}
-				};
-		m.maze=maze;
-		m.start = new Positions(0,3);
-		m.path=new LinkedList<Positions>();
-		
-		int [][] n_maze= {
-				{2,1,1,1},
-				{0,0,1,1},
-				{0,0,0,1}
-				};
-		n.maze=n_maze;
-		n.start=new Positions(0,3);
-		n.path=new LinkedList<Positions>();
-		
-		mazes.add(n);
+		Scanner in = new Scanner(new File ("src/Mazes.txt"));
+		int rows = Integer.parseInt(in.nextLine());
+		m.maze= new int[rows][];
+		for (int i=0;i<rows;i++){
+			String line =in.nextLine();
+			m.maze[i] = Arrays.stream(line.split(",")).mapToInt(Integer::parseInt).toArray(); 
+			
+		}
+		m.start=new Positions (Integer.parseInt(in.nextLine()),Integer.parseInt(in.nextLine()));
 		mazes.add(m);
 		
 		int i =0;
