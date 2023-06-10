@@ -1,5 +1,3 @@
-//Get element for the array from a file as a string ,convert to a integer array by a line of code ,using for loop added the created array stream and add to maze object and finally added to arraylist mazes.
-
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,18 +9,9 @@ public class Maze_Solver {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		Maze m =new Maze();
-		ArrayList<Maze> mazes =new ArrayList<Maze>();
-		Scanner in = new Scanner(new File ("src/Mazes.txt"));
-		int rows = Integer.parseInt(in.nextLine());
-		m.maze= new int[rows][];
-		for (int i=0;i<rows;i++){
-			String line =in.nextLine();
-			m.maze[i] = Arrays.stream(line.split(",")).mapToInt(Integer::parseInt).toArray(); 
-			
-		}
-		m.start=new Positions (Integer.parseInt(in.nextLine()),Integer.parseInt(in.nextLine()));
-		mazes.add(m);
+		
+		ArrayList<Maze> mazes =readArray();
+				
 		
 		int i =0;
 		while (i<mazes.size()) {
@@ -35,7 +24,31 @@ public class Maze_Solver {
 		 }
 		
 	}
-	 private static boolean solveMaze(Maze m) {
+	 private static ArrayList<Maze> readArray() throws FileNotFoundException {
+		// TODO Auto-generated method stub
+		Scanner in = new Scanner(new File ("src/Mazes.txt"));
+		ArrayList<Maze> mazes=new ArrayList<Maze>();
+		while (in.hasNext()) {
+			
+			Maze m =new Maze();
+
+			int rows = Integer.parseInt(in.nextLine());
+			m.maze= new int[rows][];
+			for (int i=0;i<rows;i++){
+				String line =in.nextLine();
+				m.maze[i] = Arrays.stream(line.split(",")).mapToInt(Integer::parseInt).toArray(); 
+				
+			}
+			m.start=new Positions (Integer.parseInt(in.nextLine()),Integer.parseInt(in.nextLine()));
+			mazes.add(m);
+			in.nextLine();
+			
+		
+		}
+		in.close();
+		return mazes;
+	}
+	private static boolean solveMaze(Maze m) {
 	// TODO Auto-generated method stub
 		 Positions p = m.start;
 		 m.path.push(p);
@@ -114,5 +127,5 @@ public class Maze_Solver {
 		 return true;
 		 
 	 }
-/// no matter how many rows and column you  add its gonna do it anyway ........
+/// if spaces is used to separate the data in txt file rather than symbol then u gotta be careful might be some changes make a note of it
 }
