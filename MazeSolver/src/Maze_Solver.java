@@ -1,8 +1,12 @@
 import java.util.LinkedList;
+import java.util.ArrayList;
 public class Maze_Solver {
-	static Maze m=new Maze();
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		ArrayList<Maze> mazes =new ArrayList<Maze>();
+		Maze m=new Maze();
+		Maze n =new Maze();
 		int [][] maze = {
 				{2,1,1,1},
 				{0,0,1,1},
@@ -11,19 +15,33 @@ public class Maze_Solver {
 		m.maze=maze;
 		m.start = new Positions(0,3);
 		m.path=new LinkedList<Positions>();
-		 
-		 if (solveMaze(new Positions (0,3))) {
+		
+		int [][] n_maze= {
+				{2,1,1,1},
+				{0,0,1,1},
+				{0,0,0,1}
+				};
+		n.maze=n_maze;
+		n.start=new Positions(0,3);
+		n.path=new LinkedList<Positions>();
+		
+		mazes.add(n);
+		mazes.add(m);
+		
+		int i =0;
+		while (i<mazes.size()) {
+		 if (solveMaze(mazes.get(i))) {
 			 System.out.println("you won");
 		 }else {
 			 System.out.println("no path");
+		 	}
+		 i++;
 		 }
-
-
-
-
+		
 	}
-	 private static boolean solveMaze(Positions p) {
+	 private static boolean solveMaze(Maze m) {
 	// TODO Auto-generated method stub
+		 Positions p = m.start;
 		 m.path.push(p);
  		 
 		 while(true) {
@@ -31,7 +49,7 @@ public class Maze_Solver {
 		 int x= m.path.peek().x;
 		 m.maze[y][x]=0;
 		 //down movement
-		 if (isValid(y+1,x)) {
+		 if (isValid(y+1,x,m)) {
 		 if (m.maze[y+1][x]==2) {
 			 System.out.println("moved down. ");
 			 return true;
@@ -44,9 +62,8 @@ public class Maze_Solver {
 		 	}
 		 }
 		 
-
 		 //left
-		 if(isValid(y,x-1)) {
+		 if(isValid(y,x-1,m)) {
 		 if (m.maze[y][x-1]==2) {
 			 System.out.println("moved left .");
 			 return true;
@@ -61,7 +78,7 @@ public class Maze_Solver {
 		 }
 
 //moved up
-		 if (isValid(y-1,x)) {
+		 if (isValid(y-1,x,m)) {
 		 if (m.maze[y-1][x]==2) {
 			 System.out.println("moved up.");
 			 return true;
@@ -74,7 +91,7 @@ public class Maze_Solver {
 		 	}
 		 }
 //moved right
-		 if(isValid(y,x+1)) {
+		 if(isValid(y,x+1,m)) {
 		 if (m.maze[y][x+1]==2) {
 			 System.out.println("moved right . ");
 			 return true;
@@ -94,7 +111,7 @@ public class Maze_Solver {
 		 	}
 		 }
 	 }
-	public static boolean isValid(int y,int x) {
+	public static boolean isValid(int y,int x,Maze m) {
 		 if (y<0 || y>=m.maze.length || x<0 || x>=m.maze[y].length) {
 			 return false ;
 		 }
