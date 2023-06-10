@@ -1,37 +1,76 @@
 import java.util.LinkedList;
 public class Maze_Solver {
 	static int [][] maze = {
-			{2,0,1,1},
-			{1,1,0,1},
+			{1,0,1,1},
+			{1,1,2,0},
 			{0,0,1,0}
 			};
- // 0 is wall
-// 1 is path
-// 2 is destination
-//x is column
-//y is row
+
 	static LinkedList<Positions> path =new LinkedList<Positions>();
+// y=row
+// x=column
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		 Positions p =new Positions (3,0);
-// position is a constructor used to invoke the method asap the constructor is called 
+		 Positions p =new Positions (0,3);
+// initial position ,push to stack
 		 path.push(p);
-// the reason the push is used instead of the add method because push is used for stack rather than queue.
+//y=0,x=3
 		 
-// in solving the maze ,the last position visited has to be stored in the collection ie., linked list and and recent position has to be peeked for reference.
 		 
-//that why we are using stack , if recent is not desirable than we use pop method to remove and check other possible way		 
-		 maze[path.peek().y][path.peek().x]=0;
-//peek is used to get the recent element or in other words retrieve the head of the list without removing it .
 		 
-		 for (int i=0;i<maze.length;i++) {
-			 for (int j=0;j<maze[i].length;j++) {
-				 System.out.print(maze[i][j]+ " ");
-			 }
-			 System.out.println(" ");
-//this shows that "maze[path.peek().y][path.peek().x]=0;" is worked and the passed position element becomes zero and gets updated in the maze (defined as static )
+/* program for maze with out of bound exception and in the next commit we are going to deal with it */
+		 while(true) {
+		 int y =path.peek().y;
+		 int x= path.peek().x;
+
+		 if (maze[y+1][x]==2) {
+			 System.out.println("moved down.you won ");
+			 return;
+		 }else if(maze[y+1][x]==1){  //check and move down.
+			 path.push(new Positions(y+1,x));
+			 System.out.println("moved down" );
+			 continue;
+//new position updated.
+		 	}
+		 //left
+		 if (maze[y][x-1]==2) {
+			 System.out.println("moved left .you won ");
+			 return;
+		 }else if(maze[y][x-1]==1){  //check and move down.
+		
+			 path.push(new Positions(y,x-1));
+			 System.out.println("moved left.");
+			 continue;
+//new position updated.
+		 	}
+//moved up
+		 if (maze[y-1][x]==2) {
+			 System.out.println("moved up.you won ");
+			 return;
+		 }else if(maze[y-1][x]==1){  //check and move down.
+			 path.push(new Positions(y-1,x));
+			 System.out.println("moved up");
+
+			 continue;
+//new position updated.
+		 	}
+//moved right
+		 if (maze[y][x+1]==2) {
+			 System.out.println("moved right .you won ");
+			 return;
+		 }else if(maze[y][x+1]==1){  //check and move down.
+
+			 path.push(new Positions(y,x+1));
+			 System.out.println("moved right");
+
+			 continue;
+//new position updated.
+		 	}
+		 
 		 }
+
 	}
 
 }
