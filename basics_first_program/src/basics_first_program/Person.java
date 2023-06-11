@@ -3,8 +3,8 @@ package basics_first_program;
 import java.util.Objects;
 
 public class Person  {
-	String email;
-	String ln;
+	public String email;
+	public String ln;
 	Position position;
 	Person (String email,String ln) {
 		this.email=email;
@@ -45,5 +45,6 @@ public class Person  {
 			return false;
 		return true;
 	}
+
 	
 }

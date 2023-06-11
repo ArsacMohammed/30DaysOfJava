@@ -1,18 +1,24 @@
 package basics_first_program;
 import java.util.ArrayList;
+import java.util.List;
 public class generic_basics {
 
 	public static void main(String[] args) {
-		ArrayList<Person> people = new ArrayList<Person>();
 		Admin a =new Admin();
-		people.add(a);
+		a.email="arsac@gmail.com";
+		a.ln="arsac";
+
 		ArrayList<Admin> admins = new ArrayList<Admin>();
-		doSomething(admins);
+		admins.add(a);
+		List<Person> people =(List<Person>)(List<?>) admins;
+		doSomething(people);
 	}
 
-	private static void doSomething(ArrayList<? extends Person> peeps) {
-		//? extends Person means any arraylist type that extends Person class is acceptable.
-		System.out.println(peeps);
+	private static void doSomething(List<Person> peeps) {
+		for (Person p : peeps ) {
+			System.out.println(p.ln+" "+p.email);
+		}
+		
 		
 	}
 
