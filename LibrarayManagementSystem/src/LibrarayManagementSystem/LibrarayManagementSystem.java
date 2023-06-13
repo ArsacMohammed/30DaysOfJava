@@ -21,8 +21,41 @@ public class LibrarayManagementSystem {
 			doRemoveBook();
 		}
 		
+		
+		System.out.println("do you want to update the book if yes enter 1");
+		int updateOption=in.nextInt();
+		if (updateOption==1) {
+			doUpdateBook();
+		}
 		System.out.println(books.size());
 	
+	}
+
+	private static void doUpdateBook() {
+		// TODO Auto-generated method stub
+	    System.out.println("Enter the book details for update in order as title, author name, ISBN, Quantity:");
+	    String title = in.next();
+	    String authorName = in.next();
+	    long ISBN = in.nextLong();
+	    int quantity = in.nextInt();
+	    Book bookToUpdate = new Book(title, authorName, ISBN, quantity);
+	    
+	    
+	    for (int index1=0;index1<books.size();index1++) {
+	    	if(books.get(index1).equals(bookToUpdate)) {
+	    		books.remove(index1);
+	    		System.out.println("enter the details for the book");
+	    	    String newtitle = in.next();
+	    	    String newauthorName = in.next();
+	    	    long newISBN = in.nextLong();
+	    	    int newquantity = in.nextInt();
+	    		Book updatedBook=new Book(newtitle,newauthorName,newISBN,newquantity);
+	    		books.add(updatedBook);
+	    		if (books.get(0)==updatedBook) {
+	    			System.out.println("book updated successfully");
+	    		}
+	    	}
+	    }	
 	}
 
 	private static void doAddBook() {
@@ -51,6 +84,8 @@ public class LibrarayManagementSystem {
 	    } else {
 	        System.out.println("Book not found.");
 	    }
+	    
+	    
 	}
 
 		
