@@ -8,7 +8,16 @@ public class LibrarayManagementSystem {
 	static ArrayList<Book> books =new ArrayList<Book>();
 	
 	public static void main(String[] args) {
-
+		Book book1 =new Book("succes","arsac",1234,1);		
+		Book book2 =new Book("secondsucces","sharjun",4321,1);
+		Book book3 =new Book("thirdsucces","marzjuk",5678,1);
+		books.add(book1);
+		books.add(book2);
+		books.add(book3);
+		
+		
+		
+		/*
 		System.out.println("enter the add option  as 1");
 		int  addOption= in.nextInt();
 		if (addOption == 1) {
@@ -27,9 +36,45 @@ public class LibrarayManagementSystem {
 		if (updateOption==1) {
 			doUpdateBook();
 		}
-		System.out.println(books.size());
+		System.out.println(books.size()); */
+		
+		System.out.println("do you want to search book by author ");
+		int searchOption=in.nextInt();
+		if (searchOption==1) {
+			System.out.println(doSearchByAuthor("arsac"));
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	
 	}
+
+	private static int doSearchByAuthor(String authorName) {
+		// TODO Auto-generated method stub
+		ArrayList<Book> searchResult = new ArrayList<Book>();
+		
+		for (Book book:books) {
+			if(book.getAuthor().equals(authorName)) {
+				searchResult.add(book);
+			}			
+		}
+		for (Book book :searchResult) {
+			System.out.println(book.getTitle()+" "+book.getAuthor());
+		}
+		return searchResult.size();
+		
+		
+	}
+
+
 
 	private static void doUpdateBook() {
 		// TODO Auto-generated method stub
@@ -51,9 +96,7 @@ public class LibrarayManagementSystem {
 	    	    int newquantity = in.nextInt();
 	    		Book updatedBook=new Book(newtitle,newauthorName,newISBN,newquantity);
 	    		books.add(updatedBook);
-	    		if (books.get(0)==updatedBook) {
-	    			System.out.println("book updated successfully");
-	    		}
+
 	    	}
 	    }	
 	}
