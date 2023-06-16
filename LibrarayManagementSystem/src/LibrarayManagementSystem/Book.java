@@ -23,6 +23,9 @@ public class Book {
 		return Objects.hash(title,authorName,ISBN,quantity);
 	
 	}
+	
+
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -6,6 +6,8 @@ public class LibrarayManagementSystem {
 	
 	static Scanner in =new Scanner(System.in);
 	static ArrayList<Book> books =new ArrayList<Book>();
+	static ArrayList<Borrower> borrowers =new ArrayList<Borrower>();
+ 
 	
 	public static void main(String[] args) {
 		Book book1 =new Book("succes","arsac",1234,1);		
@@ -14,38 +16,40 @@ public class LibrarayManagementSystem {
 		books.add(book1);
 		books.add(book2);
 		books.add(book3);
+
 		
+		bookToBorrow(books,borrowers);
+			
+
 		
-		
-		/*
-		System.out.println("enter the add option  as 1");
-		int  addOption= in.nextInt();
-		if (addOption == 1) {
-			doAddBook();
-		}
-		System.out.println(books.size());
-		System.out.println("do you want to remove the book");
-		int removeOption =in.nextInt();
-		if (removeOption==1) {
-			doRemoveBook();
-		}
-		
-		
-		System.out.println("do you want to update the book if yes enter 1");
-		int updateOption=in.nextInt();
-		if (updateOption==1) {
-			doUpdateBook();
-		}
-		System.out.println(books.size()); */
-		
-		System.out.println("do you want to search book by author ");
-		int searchOption=in.nextInt();
-		if (searchOption==1) {
-			System.out.println(doSearchByAuthor("arsac"));
-		}
-		
-		
-		
+//		System.out.println("enter the add option  as 1");
+//		int  addOption= in.nextInt();
+//		if (addOption == 1) {
+//			doAddBook();
+//		}
+//		System.out.println(books.size());
+//		System.out.println("do you want to remove the book");
+//		int removeOption =in.nextInt();
+//		if (removeOption==1) {
+//			doRemoveBook();
+//		}
+//		
+//		
+//		System.out.println("do you want to update the book if yes enter 1");
+//		int updateOption=in.nextInt();
+//		if (updateOption==1) {
+//			doUpdateBook();
+//		}
+//		System.out.println(books.size());
+//		
+//		System.out.println("do you want to search book by author ");
+//		int searchOption=in.nextInt();
+//		if (searchOption==1) {
+//			System.out.println(doSearchByAuthor("arsac"));
+//		}
+//		
+//		
+	}	
 		
 		
 		
@@ -55,7 +59,43 @@ public class LibrarayManagementSystem {
 		
 		
 	
-	}
+
+
+
+
+
+
+
+
+
+	private static void bookToBorrow(ArrayList<Book>books,ArrayList<Borrower>borrowers) {
+		// TODO Auto-generated method stub
+		Borrower borrower1 =new Borrower();
+		System.out.println("enter the book details to check for availibity");
+		String title =in.next();
+		String authorName = in.next();	
+		Long ISBN =in.nextLong();
+		int quantity =in.nextInt();
+		Book checkBook =new Book(title,authorName,ISBN,quantity);
+		for (Book book:books) {
+			if (book.equals(checkBook)) {
+				System.out.println("book found");
+				System.out.println("tell me ur name");
+				borrower1.name=in.next();		
+	            System.out.println("Do you want to borrow? (Enter 'true' or 'false')");
+	            boolean borrowOption = in.nextBoolean();
+	
+				if (borrowOption) {
+					borrowers.add(borrower1);
+					book.quantity=(book.quantity)-1;
+					System.out.println("nice borrowed");
+
+				}else {
+					System.out.println("some error please retype the book details");
+				}
+			}
+		}
+	}	
 
 	private static int doSearchByAuthor(String authorName) {
 		// TODO Auto-generated method stub
