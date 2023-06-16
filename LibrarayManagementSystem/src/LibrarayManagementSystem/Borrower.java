@@ -7,4 +7,11 @@ This class would represent the Borrower entity and contain attributes like name,
 	public int contactNumber;
 	public int id;
 	public int borrowingHistory;
+	
+	public Borrower(String name,int contactNumber,int id, int borrowingHistory){
+		this.name=name;
+		this.contactNumber=contactNumber;
+		this.id=id;
+		this.borrowingHistory=borrowingHistory;
+	}
 }

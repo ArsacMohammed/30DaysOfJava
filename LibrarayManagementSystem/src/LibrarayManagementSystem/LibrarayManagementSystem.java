@@ -17,60 +17,37 @@ public class LibrarayManagementSystem {
 		books.add(book2);
 		books.add(book3);
 
-		
-		bookToBorrow(books,borrowers);
-			
+		System.out.println("Type add or remove or update or searchByAuthor or borrow as per the need");	
+		String Option =in.nextLine();
 
+		if (Option.equals("add")) {
+			doAddBook();
+		}
 		
-//		System.out.println("enter the add option  as 1");
-//		int  addOption= in.nextInt();
-//		if (addOption == 1) {
-//			doAddBook();
-//		}
-//		System.out.println(books.size());
-//		System.out.println("do you want to remove the book");
-//		int removeOption =in.nextInt();
-//		if (removeOption==1) {
-//			doRemoveBook();
-//		}
-//		
-//		
-//		System.out.println("do you want to update the book if yes enter 1");
-//		int updateOption=in.nextInt();
-//		if (updateOption==1) {
-//			doUpdateBook();
-//		}
-//		System.out.println(books.size());
-//		
-//		System.out.println("do you want to search book by author ");
-//		int searchOption=in.nextInt();
-//		if (searchOption==1) {
-//			System.out.println(doSearchByAuthor("arsac"));
-//		}
-//		
-//		
+		if (Option.equals("remove")) {
+			doRemoveBook();
+		}
+		
+		if (Option.equals("update")) {
+			doUpdateBook();
+		}
+
+		if (Option.equals("searchByAuthor")) {
+			System.out.println(doSearchByAuthor("arsac"));
+		}
+		
+		if (Option.equals("borrow")) {
+			bookToBorrow(books,borrowers);
+		}
+		
+		
 	}	
 		
-		
-		
-		
-		
-		
-		
-		
-	
-
-
-
-
-
-
-
 
 
 	private static void bookToBorrow(ArrayList<Book>books,ArrayList<Borrower>borrowers) {
 		// TODO Auto-generated method stub
-		Borrower borrower1 =new Borrower();
+		
 		System.out.println("enter the book details to check for availibity");
 		String title =in.next();
 		String authorName = in.next();	
@@ -80,8 +57,12 @@ public class LibrarayManagementSystem {
 		for (Book book:books) {
 			if (book.equals(checkBook)) {
 				System.out.println("book found");
-				System.out.println("tell me ur name");
-				borrower1.name=in.next();		
+				System.out.println("tell your(borrowwer) details");
+				String name =in.next();
+				int contactDetails =in.nextInt();
+				int id =in.nextInt();
+				int borrowingHistory = in.nextInt();
+				Borrower borrower1 =new Borrower(name,contactDetails,id,borrowingHistory);	
 	            System.out.println("Do you want to borrow? (Enter 'true' or 'false')");
 	            boolean borrowOption = in.nextBoolean();
 	
