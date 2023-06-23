@@ -1,0 +1,161 @@
+[33mcommit 805ac2e2e5b21d6b7f99e9788523e01824e5677b[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Tue Jun 20 20:07:47 2023 +0530
+
+    connecting eclipse(java) to postgres database
+
+[33mcommit 14612094fce4eee2911e53941027188877747188[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Fri Jun 16 12:11:04 2023 +0530
+
+    refactoring the main method and modofying the borrwoing class
+
+[33mcommit 8c41110bf367a6b65d5304e1df9333811fc5a87c[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Fri Jun 16 11:15:56 2023 +0530
+
+    bookToBorrow method
+
+[33mcommit 1ef72542d596ba2edc2b022363ec0c5f3cc1850c[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Tue Jun 13 12:07:25 2023 +0530
+
+    search book by author is done
+
+[33mcommit f2b5afca3bc19a8c110ce73b1a6256a0455ad5f5[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Tue Jun 13 09:36:01 2023 +0530
+
+    update mathod is included
+
+[33mcommit 21f579872390d48f573407dc37f081a11669ab63[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Tue Jun 13 08:41:28 2023 +0530
+
+    adding and removing the book is completed
+
+[33mcommit ee165e3c601fcd4fe53adefbc4369e43888ae973[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Mon Jun 12 22:31:17 2023 +0530
+
+    getting book details and storing inside the arraylist
+
+[33mcommit 2fa003e1fc3799ea0950f15db664c2da94d31b75[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Mon Jun 12 18:55:54 2023 +0530
+
+    Library Mangement System project is created and classes created for entities
+
+[33mcommit 25534a9dd9db8d495a265826d3afedc0b4d0a950[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Mon Jun 12 18:46:27 2023 +0530
+
+    created Library mangement system project and put the key entitis inside the separete classes
+
+[33mcommit 4d76a3fae2b4e5fd145923269d5c58f7ac268ea5[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sun Jun 11 18:22:42 2023 +0530
+
+    done with genric programming
+
+[33mcommit f6f8c315ec15f82f019507bbeeae851e6e2dc05a[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sun Jun 11 18:09:49 2023 +0530
+
+    wildcard to extend to super class
+
+[33mcommit 947ab7f5a755ff3f6b94858001386434a25145c3[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sun Jun 11 17:31:37 2023 +0530
+
+    generic with inheritance
+
+[33mcommit 81b1504b7064ec637ad0144e6f3651fb024918ad[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sun Jun 11 16:38:42 2023 +0530
+
+    generic basic day1
+
+[33mcommit 075d7b114332dc22eb0d4d299c61e19bb19a4253[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sun Jun 11 13:08:58 2023 +0530
+
+    hashset
+
+[33mcommit 714edef219233256c18f2458ada130f3756a6fd9[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sun Jun 11 11:25:26 2023 +0530
+
+    override hashcode and equals method
+
+[33mcommit dc62aabb27137069089da3aa55710f6a87cc01e7[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sun Jun 11 07:57:03 2023 +0530
+
+    hashing basics
+
+[33mcommit 314042603eb391f847f9949b742a4b81b8f99d65[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sat Jun 10 18:44:16 2023 +0530
+
+    refactoring the arraylist for looping through the txt file  to clean the main method
+
+[33mcommit 026548b2ce773bb07ef4fa676340190c066a5c3e[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sat Jun 10 17:58:36 2023 +0530
+
+    get input from a file and execute the maze solver prpogram
+
+[33mcommit d4cd55de0ed73b009618581a4f3fe9d09640c96a[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sat Jun 10 16:38:20 2023 +0530
+
+    oops and Arraylist is used to include multiple mazes , looping throurgh them to solve multiple mazes
+
+[33mcommit ae1b39ff0a6dfcadabf18041973c47b007895a34[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sat Jun 10 16:03:38 2023 +0530
+
+    little taste of oops in maze program
+
+[33mcommit 9bd3b76b78fe9e3034a734c754f5d1edcf8dbdc5[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sat Jun 10 11:30:34 2023 +0530
+
+    MazeSolver porgram Refactored
+
+[33mcommit 01d807b22a192c47fe36c27637cde8906aaf6336[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sat Jun 10 10:58:33 2023 +0530
+
+    Maze Solver Complete
+
+[33mcommit fcf9d85580e83252eb487105ca85e6d95efbf04a[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Sat Jun 10 08:40:35 2023 +0530
+
+    program for maze check all four direction and position get updated if exist or check other direction note that this program do not dealt with out bound exception if no path exist
+
+[33mcommit 727bf2a7594a6bdf6d5d7e491bbd9b0975436292[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Thu Jun 8 22:01:42 2023 +0530
+
+    Maze_Solver folder created and linked list ,path ,position_update is done
+
+[33mcommit 6c75a7e9020271fa1622572add7ad39182795fe6[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Thu Jun 8 18:37:49 2023 +0530
+
+    Working with 2d  arrays
+
+[33mcommit 92ba995d37bc1f4c2132f06c2ba5046370bce8c1[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Thu Jun 8 14:42:39 2023 +0530
+
+    convert queue to stack
+
+[33mcommit e06eb15b2e45d5e1c6c3a318cee284e2cfcd1c3e[m
+Author: ArsacMohammed <arsacskasha@gmail.com>
+Date:   Thu Jun 8 08:47:47 2023 +0530
+
+    intial commit
