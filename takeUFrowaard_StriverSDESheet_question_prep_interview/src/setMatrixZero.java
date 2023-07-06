@@ -3,7 +3,7 @@ public class setMatrixZero{
 		int[][] matrix= {{1,1,1},{1,0,1},{1,1,1}};
 		printMatrix(matrix);
 		zeroMatrix(matrix);
-		printMatrix(matrix);
+		printMatrix(matrix)
 		
 		
 		
