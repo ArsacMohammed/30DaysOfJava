@@ -18,7 +18,7 @@ public class palindromeChecker {
 			return;
 			}
 		}
-		System.out.println("the given string is a plaindrome");
+		System.out.println("the given string is a palindrome");
 		
 
 	}
