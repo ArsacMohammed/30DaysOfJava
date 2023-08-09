@@ -7,7 +7,7 @@ public class LibrarayManagementSystem {
 	static Scanner in =new Scanner(System.in);
 	static ArrayList<Book> books =new ArrayList<Book>();
 	static ArrayList<Borrower> borrowers =new ArrayList<Borrower>();
- 
+	static boolean choice =false;
 	
 	public static void main(String[] args) {
 		Book book1 =new Book("succes","arsac",1234,1);		
@@ -15,37 +15,96 @@ public class LibrarayManagementSystem {
 		Book book3 =new Book("thirdsucces","marzjuk",5678,1);
 		books.add(book1);
 		books.add(book2);
-		books.add(book3);
-
-		System.out.println("Type add or remove or update or searchByAuthor or borrow as per the need");	
-		String Option =in.nextLine();
-
-		if (Option.equals("add")) {
-			doAddBook();
-		}
-		
-		if (Option.equals("remove")) {
-			doRemoveBook();
-		}
-		
-		if (Option.equals("update")) {
-			doUpdateBook();
-		}
-
-		if (Option.equals("searchByAuthor")) {
-			System.out.println(doSearchByAuthor("arsac"));
-		}
-		
-		if (Option.equals("borrow")) {
-			bookToBorrow(books,borrowers);
-		}
-		
+		books.add(book3);	
+		menu();
 		
 	}	
+	
+	public static void menu() {
+        System.out.println("1. Add a Book");
+        System.out.println("2. Remove a Book");
+        System.out.println("3. Borrow a Book");
+        System.out.println("4. Update a Book");
+        System.out.println("5. Search By Author");
+        System.out.println("6. Print all the Books");
+        System.out.println("7. Print all the Books details");
+        System.out.println("0. Exit");
+        System.out.print("Enter your choice: ");
+
+        int option = in.nextInt();
+        in.nextLine(); // Consume newline
+
+        switch (option) {
+            case 1:
+                doAddBook();
+                break;
+            case 2:
+                doRemoveBook();
+                break;
+            case 3:
+                doBookToBorrow(books,borrowers);
+                break;
+            case 4:
+                doUpdateBook();
+                break;
+            case 5:
+            	String nameOfAuthor =in.nextLine();
+                doSearchByAuthor(nameOfAuthor);
+                break;
+            case 6:
+                doPrintBookList();
+                break;
+            case 7:
+                doPrintAllBookDetails();
+                break;
+            case 0:
+                System.out.println("Thanks for using the library!");
+                return;
+            default:
+                System.out.println("Invalid input. Please enter a valid choice.");
+        }
+
+        if (wantToContinue()) {
+            menu();
+        } else {
+            System.out.println("Thanks for visiting the library! Come again sometime!");
+        }
+    }
+
+
+	private static void visitAgain() {
+		// TODO Auto-generated method stub
+		System.out.println("Thanks for coming to the library ,Come Again Sometime!!");
 		
+	}
 
+    private static boolean wantToContinue() {
+        System.out.println("Do you want to continue using the library? Enter 'yes' or 'no': ");
+        String input = in.nextLine().toLowerCase();
 
-	private static void bookToBorrow(ArrayList<Book>books,ArrayList<Borrower>borrowers) {
+        while (!input.equals("yes") && !input.equals("no")) {
+            System.out.println("Invalid input. Please enter 'yes' or 'no': ");
+            input = in.nextLine().toLowerCase();
+        }
+
+        return input.equals("yes");
+    }
+
+	private static void doPrintAllBookDetails() {
+		// TODO Auto-generated method stub
+		for (Book book :books) {
+			System.out.println(book.title+" "+book.authorName+" "+book.ISBN+" "+book.quantity);
+		}
+		
+	}
+	
+    public static void doPrintBookList() {
+        System.out.println("Book List:");
+        for (int i = 0; i < books.size(); i++) {
+            System.out.println("Index " + i + ": " + books.get(i).getTitle());
+        }
+    }
+	private static void doBookToBorrow(ArrayList<Book>books,ArrayList<Borrower>borrowers) {
 		// TODO Auto-generated method stub
 		
 		System.out.println("enter the book details to check for availibity");
@@ -73,9 +132,11 @@ public class LibrarayManagementSystem {
 
 				}else {
 					System.out.println("some error please retype the book details");
+					doBookToBorrow(books,borrowers);
 				}
 			}
 		}
+		
 	}	
 
 	private static int doSearchByAuthor(String authorName) {
@@ -91,8 +152,6 @@ public class LibrarayManagementSystem {
 			System.out.println(book.getTitle()+" "+book.getAuthor());
 		}
 		return searchResult.size();
-		
-		
 	}
 
 
@@ -128,8 +187,10 @@ public class LibrarayManagementSystem {
 	    String authorName = in.next();
 	    long ISBN = in.nextLong();
 	    int quantity = in.nextInt();
+	    in.nextLine(); 
 	    Book book1 = new Book(title, authorName, ISBN, quantity);
-		books.add(book1);		
+		books.add(book1);	
+		System.out.println("Book added sucessfully");
 	}
 	
 	private static void doRemoveBook() {
@@ -138,7 +199,7 @@ public class LibrarayManagementSystem {
 	    String authorName = in.next();
 	    long ISBN = in.nextLong();
 	    int quantity = in.nextInt();
-	    
+	    in.nextLine();
 	    // Create a temporary book object with the given details for searching
 	    Book bookToRemove = new Book(title, authorName, ISBN, quantity);
 	    
@@ -148,8 +209,7 @@ public class LibrarayManagementSystem {
 	    } else {
 	        System.out.println("Book not found.");
 	    }
-	    
-	    
+	   	    
 	}
 
 		
