@@ -8,70 +8,124 @@ public class LibrarayManagementSystem {
 	static ArrayList<Book> books =new ArrayList<Book>();
 	static ArrayList<Borrower> borrowers =new ArrayList<Borrower>();
 	static boolean choice =false;
+	static User currentUser =null;
+	static List<User>users =new ArrayList<>();
+	
 	
 	public static void main(String[] args) {
-		Book book1 =new Book("succes","arsac",1234,1);		
-		Book book2 =new Book("secondsucces","sharjun",4321,1);
-		Book book3 =new Book("thirdsucces","marzjuk",5678,1);
-		books.add(book1);
-		books.add(book2);
-		books.add(book3);	
+		initialiseUser();
+		initialiseBooks();
 		menu();
 		
 	}	
+	public static void initialiseUser() {
+		users.add(new User("admin","admin",Role.Librarian));
+		users.add(new User("user","user",Role.Borrower));
+	}
+	public static void initialiseBooks() {
+		books.add(new Book("succes","arsac",1234,1));		
+		books.add(new Book("secondsucces","sharjun",4321,1));
+		books.add(new Book("thirdsucces","marzjuk",5678,1));
+	}
 	
 	public static void menu() {
-        System.out.println("1. Add a Book");
-        System.out.println("2. Remove a Book");
-        System.out.println("3. Borrow a Book");
-        System.out.println("4. Update a Book");
-        System.out.println("5. Search By Author");
-        System.out.println("6. Print all the Books");
-        System.out.println("7. Print all the Books details");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice: ");
+	    authenticate();
 
-        int option = in.nextInt();
-        in.nextLine(); // Consume newline
+	    if (currentUser != null) {
+	        // Authentication successful. Display welcome message based on user role.
+	        System.out.println("Welcome, " + currentUser.getUserName() + "!");
+	        
+	        // Proceed with menu options based on user role
+	        if (currentUser.getRole() == Role.Librarian) {
+	            librarianMenu(); // Call librarian menu
+	        } else if (currentUser.getRole() == Role.Borrower) {
+	            borrowerMenu(); // Call borrower menu
+	        }
+	    } else {
+	        // Authentication failed. Display an error message.
+	        System.out.println("Authentication failed. Exiting...");
+	    }
+	}
+	
+	public static void librarianMenu() {
+	    System.out.println("Librarian Menu:");
+	    System.out.println("1. Add a Book");
+	    System.out.println("2. Remove a Book");
+	    System.out.println("4. Update a Book");
+	    // ... other librarian menu options
+	    System.out.println("0. Exit");
+	    System.out.print("Enter your choice: ");
+	    int option = in.nextInt();
+	    in.nextLine(); // Consume newline
 
-        switch (option) {
-            case 1:
-                doAddBook();
-                break;
-            case 2:
-                doRemoveBook();
-                break;
-            case 3:
-                doBookToBorrow(books,borrowers);
-                break;
-            case 4:
+	    switch (option) {
+	        case 1:
+	            doAddBook();
+	            break;
+	        case 2:
+	            doRemoveBook();
+	            break;
+	        case 3:
                 doUpdateBook();
                 break;
-            case 5:
+	        case 0:
+	            System.out.println("Thanks for using the library!");
+	            return;
+	        default:
+	            System.out.println("Invalid input. Please enter a valid choice.");
+	    }
+
+	    if (wantToContinue()) {
+	        librarianMenu();
+	    } else {
+	        System.out.println("Thanks for visiting the library! Come again sometime!");
+	    }
+	}
+	
+	public static void borrowerMenu() {
+	    System.out.println("Borrower Menu:");
+	    System.out.println("1. Borrow a Book");      
+        System.out.println("2. Search By Author");
+        System.out.println("3. Print all the Books");
+        System.out.println("4. Print all the Books details");
+	    System.out.println("0. Exit");
+	    System.out.print("Enter your choice: ");
+	    int option = in.nextInt();
+	    in.nextLine();
+
+	    switch (option) {
+	        case 1:
+	            doBookToBorrow(books, borrowers);
+	            break;
+	        case 2:
             	String nameOfAuthor =in.nextLine();
                 doSearchByAuthor(nameOfAuthor);
                 break;
-            case 6:
+            case 3:
                 doPrintBookList();
                 break;
-            case 7:
+            case 4:
                 doPrintAllBookDetails();
                 break;
-            case 0:
-                System.out.println("Thanks for using the library!");
-                return;
-            default:
-                System.out.println("Invalid input. Please enter a valid choice.");
-        }
+	        case 0:
+	            System.out.println("Thanks for using the library!");
+	            return;
+	        default:
+	            System.out.println("Invalid input. Please enter a valid choice.");
+	    }
 
-        if (wantToContinue()) {
-            menu();
-        } else {
-            System.out.println("Thanks for visiting the library! Come again sometime!");
-        }
-    }
+	    if (wantToContinue()) {
+	        borrowerMenu();
+	    } else {
+	        System.out.println("Thanks for visiting the library! Come again sometime!");
+	    }
+	}
 
-
+	public static void authenticate() {
+		
+	}
+	
+	
 	private static void visitAgain() {
 		// TODO Auto-generated method stub
 		System.out.println("Thanks for coming to the library ,Come Again Sometime!!");
