@@ -32,17 +32,14 @@ public class LibrarayManagementSystem {
 	    authenticate();
 
 	    if (currentUser != null) {
-	        // Authentication successful. Display welcome message based on user role.
 	        System.out.println("Welcome, " + currentUser.getUserName() + "!");
 	        
-	        // Proceed with menu options based on user role
 	        if (currentUser.getRole() == Role.Librarian) {
-	            librarianMenu(); // Call librarian menu
+	            librarianMenu(); 
 	        } else if (currentUser.getRole() == Role.Borrower) {
-	            borrowerMenu(); // Call borrower menu
+	            borrowerMenu(); 
 	        }
 	    } else {
-	        // Authentication failed. Display an error message.
 	        System.out.println("Authentication failed. Exiting...");
 	    }
 	}
@@ -122,7 +119,20 @@ public class LibrarayManagementSystem {
 	}
 
 	public static void authenticate() {
-		
+	    System.out.println("Enter your username: ");
+	    String username = in.nextLine();
+	    System.out.println("Enter your password: ");
+	    String password = in.nextLine();
+
+	    // Check entered credentials against user list
+	    for (User user : users) {
+	        if (user.getUserName().equals(username) && user.getPassword().equals(password)) {
+	            currentUser = user;
+	            return; // Authentication successful
+	        }
+	    }
+
+	    currentUser = null; // Authentication failed
 	}
 	
 	
