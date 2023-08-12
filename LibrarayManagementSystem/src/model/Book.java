@@ -17,6 +17,12 @@ public class Book {
 	public String getAuthor() {
 		return authorName;
 	}
+	public long getISBN() {
+		return ISBN;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
 
 	@Override
 	public int hashCode() {

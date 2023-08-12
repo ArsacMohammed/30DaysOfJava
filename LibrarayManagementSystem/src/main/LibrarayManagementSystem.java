@@ -7,6 +7,7 @@ import model.Book;
 import model.Borrower;
 import model.User;
 import model.Role;
+import dao.BookDAO;
 public class LibrarayManagementSystem {
 	
 	static Scanner in =new Scanner(System.in);
@@ -251,10 +252,16 @@ public class LibrarayManagementSystem {
 	    long ISBN = in.nextLong();
 	    int quantity = in.nextInt();
 	    in.nextLine(); 
-	    Book book1 = new Book(title, authorName, ISBN, quantity);
-		books.add(book1);	
-		System.out.println("Book added sucessfully");
-	}
+	    Book bookToAdd = new Book(title, authorName, ISBN, quantity);
+	    boolean isAdded = BookDAO.addBook(bookToAdd);
+
+        if (isAdded) {
+            System.out.println("Book added successfully.");
+        } else {
+            System.out.println("Failed to add book.");
+        }
+}
+
 	
 	private static void doRemoveBook() {
 	    System.out.println("Enter the book details in order as title, author name, ISBN, Quantity:");
