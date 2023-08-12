@@ -1,4 +1,4 @@
-package LibrarayManagementSystem;
+package model;
 
 public class Borrower {
 /*Borrower Class:

@@ -1,10 +1,10 @@
-package LibrarayManagementSystem;
+package model;
 import java.util.*;
 public class Book {
-	String title;
-	String authorName;
-	long ISBN ;
-	int quantity;
+	public String title;
+	public String authorName;
+	public long ISBN ;
+	public int quantity;
 	public Book(String title,String authorName,long ISBN ,int quantity) {
 		this.title=title;
 		this.authorName=authorName;

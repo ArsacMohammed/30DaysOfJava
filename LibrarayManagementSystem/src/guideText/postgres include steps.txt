@@ -1,0 +1,45 @@
+Absolutely! You can use PostgreSQL as the database for your Library Management System instead of SQLite. The steps are quite similar to what I mentioned earlier, but with some changes related to setting up PostgreSQL.
+
+Here's a modified version of the procedure using PostgreSQL:
+
+**Step 1: Set Up PostgreSQL**
+
+1. Download and install PostgreSQL on your system if you haven't already. You can download it from the PostgreSQL website.
+2. Create a new PostgreSQL database for your library application using tools like `createdb` command-line utility or a GUI tool like pgAdmin.
+
+**Step 2: Add PostgreSQL JDBC Driver**
+
+1. Download the PostgreSQL JDBC driver JAR file from the PostgreSQL website or use a dependency management tool.
+2. Add the driver JAR to your project's classpath.
+
+**Step 3: Create a Database Connection**
+
+1. Import the necessary classes for JDBC and PostgreSQL in your code.
+2. Open a connection to the PostgreSQL database using the JDBC driver and connection string. Example: `"jdbc:postgresql://localhost:5432/librarydb"`.
+3. Create the necessary tables (books, users) in the PostgreSQL database.
+
+**Step 4: Modify Data Access Methods**
+
+1. Update your methods that interact with data to use PostgreSQL instead of ArrayLists.
+2. Modify methods to use SQL queries compatible with PostgreSQL syntax.
+
+**Step 5: Retrieve Data from Database**
+
+1. Modify methods like `initialiseBooks()` and `initialiseUser()` to retrieve data from the PostgreSQL database tables during application startup.
+2. Use SQL SELECT queries specific to PostgreSQL to fetch data.
+
+**Step 6: Update Data**
+
+1. Modify methods like `doUpdateBook()` and `doRemoveBook()` to perform database updates and deletions using PostgreSQL-specific SQL queries.
+
+**Step 7: Close Database Connection**
+
+1. Close the PostgreSQL database connection when it's no longer needed.
+
+**Step 8: Exception Handling**
+
+1. Implement proper exception handling around database operations to handle errors gracefully.
+
+Please note that the code snippets provided in my previous responses were tailored for SQLite. To use PostgreSQL, you'll need to adjust the connection URLs, SQL syntax, and other specific PostgreSQL-related details.
+
+Using PostgreSQL over SQLite can provide benefits like better scalability, support for larger datasets, and advanced features. However, setting up and managing a PostgreSQL server might require more configuration compared to SQLite.

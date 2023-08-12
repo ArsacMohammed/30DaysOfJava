@@ -1,8 +1,13 @@
-package LibrarayManagementSystem;
+package main;
+
 import java.util.ArrayList;
 import java.util.*;
+import dao.DatabaseConnection;
+import model.Book;
+import model.Borrower;
+import model.User;
+import model.Role;
 public class LibrarayManagementSystem {
-//  getting input for a book and storing it inside an arraylist.
 	
 	static Scanner in =new Scanner(System.in);
 	static ArrayList<Book> books =new ArrayList<Book>();
@@ -49,7 +54,7 @@ public class LibrarayManagementSystem {
 	    System.out.println("1. Add a Book");
 	    System.out.println("2. Remove a Book");
 	    System.out.println("4. Update a Book");
-	    // ... other librarian menu options
+	    // other librarian menu options
 	    System.out.println("0. Exit");
 	    System.out.print("Enter your choice: ");
 	    int option = in.nextInt();
@@ -124,20 +129,18 @@ public class LibrarayManagementSystem {
 	    System.out.println("Enter your password: ");
 	    String password = in.nextLine();
 
-	    // Check entered credentials against user list
 	    for (User user : users) {
 	        if (user.getUserName().equals(username) && user.getPassword().equals(password)) {
 	            currentUser = user;
-	            return; // Authentication successful
+	            return; 
 	        }
 	    }
 
-	    currentUser = null; // Authentication failed
+	    currentUser = null;
 	}
 	
 	
 	private static void visitAgain() {
-		// TODO Auto-generated method stub
 		System.out.println("Thanks for coming to the library ,Come Again Sometime!!");
 		
 	}
@@ -155,7 +158,6 @@ public class LibrarayManagementSystem {
     }
 
 	private static void doPrintAllBookDetails() {
-		// TODO Auto-generated method stub
 		for (Book book :books) {
 			System.out.println(book.title+" "+book.authorName+" "+book.ISBN+" "+book.quantity);
 		}
@@ -169,7 +171,6 @@ public class LibrarayManagementSystem {
         }
     }
 	private static void doBookToBorrow(ArrayList<Book>books,ArrayList<Borrower>borrowers) {
-		// TODO Auto-generated method stub
 		
 		System.out.println("enter the book details to check for availibity");
 		String title =in.next();
@@ -204,7 +205,6 @@ public class LibrarayManagementSystem {
 	}	
 
 	private static int doSearchByAuthor(String authorName) {
-		// TODO Auto-generated method stub
 		ArrayList<Book> searchResult = new ArrayList<Book>();
 		
 		for (Book book:books) {
@@ -221,7 +221,6 @@ public class LibrarayManagementSystem {
 
 
 	private static void doUpdateBook() {
-		// TODO Auto-generated method stub
 	    System.out.println("Enter the book details for update in order as title, author name, ISBN, Quantity:");
 	    String title = in.next();
 	    String authorName = in.next();
@@ -264,7 +263,6 @@ public class LibrarayManagementSystem {
 	    long ISBN = in.nextLong();
 	    int quantity = in.nextInt();
 	    in.nextLine();
-	    // Create a temporary book object with the given details for searching
 	    Book bookToRemove = new Book(title, authorName, ISBN, quantity);
 	    
 	    if (books.contains(bookToRemove)) {
