@@ -53,7 +53,9 @@ public class LibrarayManagementSystem {
 	    System.out.println("Librarian Menu:");
 	    System.out.println("1. Add a Book");
 	    System.out.println("2. Remove a Book");
-	    System.out.println("4. Update a Book");
+	    System.out.println("3. Update a Book");
+	    System.out.println("4. View all the Books");
+	    System.out.println("5. View complete Books details");
 	    // other librarian menu options
 	    System.out.println("0. Exit");
 	    System.out.print("Enter your choice: ");
@@ -70,6 +72,11 @@ public class LibrarayManagementSystem {
 	        case 3:
                 doUpdateBook();
                 break;
+	        case 4:
+	        	doPrintBookList();
+	        	break;
+	        case 5:
+	        	doPrintAllBookDetails();
 	        case 0:
 	            System.out.println("Thanks for using the library!");
 	            return;
@@ -87,9 +94,12 @@ public class LibrarayManagementSystem {
 	public static void borrowerMenu() {
 	    System.out.println("Borrower Menu:");
 	    System.out.println("1. Borrow a Book");      
-        System.out.println("2. Search By Author");
+        System.out.println("2. Search for a book ");
         System.out.println("3. Print all the Books");
         System.out.println("4. Print all the Books details");
+        System.out.println("5. Return a book");
+        System.out.println("6. Borrowed Book list ");
+        System.out.println("7. Pay fine .");
 	    System.out.println("0. Exit");
 	    System.out.print("Enter your choice: ");
 	    int option = in.nextInt();
@@ -323,8 +333,5 @@ public class LibrarayManagementSystem {
 	    }
 	   	    
 	}
-
-		
-		
-		
+	
 }
