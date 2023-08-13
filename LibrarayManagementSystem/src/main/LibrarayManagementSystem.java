@@ -1,6 +1,5 @@
 package main;
 
-import java.util.ArrayList;
 import java.util.*;
 import dao.DatabaseConnection;
 import model.Book;
@@ -173,12 +172,8 @@ public class LibrarayManagementSystem {
     }
 	private static void doBookToBorrow(ArrayList<Book>books,ArrayList<Borrower>borrowers) {
 		
-		System.out.println("enter the book details to check for availibity");
-		String title =in.next();
-		String authorName = in.next();	
-		Long ISBN =in.nextLong();
-		int quantity =in.nextInt();
-		Book checkBook =new Book(title,authorName,ISBN,quantity);
+		System.out.println("To borrow first check for book availability");
+		Book checkBook =getBookInfo();
 		for (Book book:books) {
 			if (book.equals(checkBook)) {
 				System.out.println("book found");
@@ -207,7 +202,6 @@ public class LibrarayManagementSystem {
 
 	private static int doSearchByAuthor(String authorName) {
 		ArrayList<Book> searchResult = new ArrayList<Book>();
-		
 		for (Book book:books) {
 			if(book.getAuthor().equals(authorName)) {
 				searchResult.add(book);
@@ -222,14 +216,8 @@ public class LibrarayManagementSystem {
 
 
 	private static void doUpdateBook() {
-	    System.out.println("Enter the book details for update in order as title, author name, ISBN, Quantity:");
-	    String title = in.next();
-	    String authorName = in.next();
-	    long ISBN = in.nextLong();
-	    int quantity = in.nextInt();
-	    Book bookToUpdate = new Book(title, authorName, ISBN, quantity);
-	    
-	    
+	    System.out.println("To update the required book : ");
+	    Book bookToUpdate = getBookInfo();
 	    for (int index1=0;index1<books.size();index1++) {
 	    	if(books.get(index1).equals(bookToUpdate)) {
 	    		books.remove(index1);
@@ -245,14 +233,9 @@ public class LibrarayManagementSystem {
 	    }	
 	}
 
-	private static void doAddBook() {
-	    System.out.println("Enter the book details in order as title, author name, ISBN, Quantity:");
-	    String title = in.next();
-	    String authorName = in.next();
-	    long ISBN = in.nextLong();
-	    int quantity = in.nextInt();
-	    in.nextLine(); 
-	    Book bookToAdd = new Book(title, authorName, ISBN, quantity);
+	private static void doAddBook() { 
+		System.out.println("To add the book : ");
+	    Book bookToAdd = getBookInfo();
 	    boolean isAdded = BookDAO.addBook(bookToAdd);
 
         if (isAdded) {
@@ -260,18 +243,78 @@ public class LibrarayManagementSystem {
         } else {
             System.out.println("Failed to add book.");
         }
-}
+	}
 
+	private static Book getBookInfo() {
+		// TODO Auto-generated method stub
+		System.out.println("Enter the book details in order as title, author name, ISBN, Quantity:");
+	    System.out.println("Enter the title of the book !");
+	    String title = "";
+	    while (title.isEmpty()) {  	
+	    	title=in.nextLine();
+	    	if (title.isEmpty()) {
+	            System.out.println("Book title cannot be empty.");
+	        }
+	    }
+	    
+	    String authorName="";
+	    System.out.println("Enter the authorName for the book !");
+	    while (authorName.isEmpty() || !isalphabet(authorName)) {  	
+	    	authorName = in.nextLine();
+	    	if (!isalphabet(authorName)) {
+	    		System.out.println("Book authorName must contain only alphabet");
+	    	}
+	    	else if (authorName.isEmpty()) {
+	            System.out.println("Book authorName cannot be empty.");
+	        }
+	    }
+	    
+	    System.out.println("Enter Valid ISBN ! Only Numbers..");
+	    long ISBN =0;
+	    boolean isvalid = false ;
+	    while (!isvalid) {
+	    	try {
+	    		ISBN = in.nextLong();
+	    		isvalid =true;
+	    	}catch(InputMismatchException e){
+	    		System.out.println("Invalid ISBN ! provide valid input");
+	    		in.next(); // Consume invalid input to avoid an infinite loop
+	    	}
+	    }
+	    
+	    
+	    
+	    System.out.println("Enter the Quantity of the book..");
+	    int quantity=1;
+	    boolean isValidQuantity = false;
+	    while (!isValidQuantity) {
+	    	if (in.hasNextInt()) {
+	    		quantity =in.nextInt();
+	    		in.nextLine(); 
+	    		isValidQuantity=true;
+	    	}
+	    	else {
+	    		System.out.println("Invalid quantity format !! please  provide the valid quantity in numbers only..");
+	    		in.next();
+	    	}
+	    }
+	    return new Book (title,authorName,ISBN,quantity);
+	}
+
+
+	public static boolean isalphabet(String input) {
+		char [] charArray = input.toCharArray();
+		for (char ch:charArray) {
+			if (!Character.isLetter(ch)) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	private static void doRemoveBook() {
-	    System.out.println("Enter the book details in order as title, author name, ISBN, Quantity:");
-	    String title = in.next();
-	    String authorName = in.next();
-	    long ISBN = in.nextLong();
-	    int quantity = in.nextInt();
-	    in.nextLine();
-	    Book bookToRemove = new Book(title, authorName, ISBN, quantity);
-	    
+	    System.out.println("To remove the book: ");
+	    Book bookToRemove = getBookInfo();
 	    if (books.contains(bookToRemove)) {
 	        books.remove(bookToRemove);
 	        System.out.println("Book removed successfully.");
