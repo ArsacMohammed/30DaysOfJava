@@ -5,6 +5,7 @@ public class Book {
 	public String authorName;
 	public long ISBN ;
 	public int quantity;
+	public  int ID;
 	public Book(String title,String authorName,long ISBN ,int quantity) {
 		this.title=title;
 		this.authorName=authorName;
@@ -23,6 +24,8 @@ public class Book {
 	public int getQuantity() {
 		return quantity;
 	}
+	
+
 
 	@Override
 	public int hashCode() {
@@ -56,6 +59,13 @@ public class Book {
 		} else if (!title.equals(other.title))
 			return false;
 		return true;
+	}
+
+	public void setId(int ID) {
+	    this.ID = ID;
+	}
+	public int getId() {
+		return ID;
 	}
 	
 	

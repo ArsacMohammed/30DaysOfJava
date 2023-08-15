@@ -1,5 +1,9 @@
 package main;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import dao.DatabaseConnection;
 import model.Book;
@@ -14,28 +18,137 @@ public class LibrarayManagementSystem {
 	static ArrayList<Borrower> borrowers =new ArrayList<Borrower>();
 	static boolean choice =false;
 	static User currentUser =null;
-	static List<User>users =new ArrayList<>();
-	
 	
 	public static void main(String[] args) {
-		initialiseUser();
-		initialiseBooks();
-		menu();
-		
-	}	
-	public static void initialiseUser() {
-		users.add(new User("admin","admin",Role.Librarian));
-		users.add(new User("user","user",Role.Borrower));
+	    boolean exitMenu = false;
+	    if (!isAdminExists()) {
+	        User defaultAdmin = new User("admin", "admin", Role.Librarian);
+	        BookDAO.addUser(defaultAdmin);
+	        System.out.println("Default Admin added !");
+	    } else {
+	        System.out.println("Admin already exists!!");
+	    }
+
+	    do {
+	        menu();
+	        System.out.println("If you want to continue using the menu, enter 1; otherwise, enter 2");
+	        int menuChoice = 0;
+	        while (menuChoice != 1 && menuChoice != 2) {
+	            menuChoice = in.nextInt();
+	            in.nextLine();
+	        }
+
+	        if (menuChoice == 1) {
+	            System.out.println("Returning to the menu...");
+	        } else if (menuChoice == 2) {
+	            exitMenu = true;
+	            System.out.println("Exiting the menu...");
+	        }
+	    } while (!exitMenu);
 	}
-	public static void initialiseBooks() {
-		books.add(new Book("succes","arsac",1234,1));		
-		books.add(new Book("secondsucces","sharjun",4321,1));
-		books.add(new Book("thirdsucces","marzjuk",5678,1));
+
+	
+	public static boolean isAdminExists() {
+	    String adminUsername = "admin";
+
+	    String checkQuery = "SELECT COUNT(*) AS count FROM admin WHERE username = ?";
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
+
+	        checkStatement.setString(1, adminUsername);
+	        ResultSet checkResult = checkStatement.executeQuery();
+	        checkResult.next();
+	        int adminCount = checkResult.getInt("count");
+
+	        return adminCount > 0;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Connection Interrupted !!");
+	        return false;
+	    }
+	}
+	private static void doAddAdmin() {
+		System.out.println("Enter the Admin credentials");
+		User adminToAdd = getUserInfo();
+		boolean isAdminAdded = BookDAO.addUser(adminToAdd);
+		if (isAdminAdded) {
+			System.out.println("Admin successfully added ");
+		}else {
+			System.out.println("Something went wwrong ! please try it again!");
+		}
 	}
 	
-	public static void menu() {
-	    authenticate();
+	private static User getUserInfo() {
+		// TODO Auto-generated method stub
+		System.out.println("Enter the ");
+		String username="";
+		while(username.isEmpty() || !isAlphabet(username)) {
+			username = in.nextLine();
+			if (!isAlphabet(username)) {
+	    		System.out.println("Book username must contain only alphabet");
+	    	}
+	    	else if (username.isEmpty()) {
+	            System.out.println("Book username cannot be empty.");
+	        }
+		}
+		String password ="";
+		while(password.isEmpty()) {
+			password = in.nextLine();
+			if (username.isEmpty()) {
+	            System.out.println("Book password cannot be empty.");
+	        }
+		}
+		
+		System.out.println("Are you a User or Admin");
+		System.out.println("1.Librarian");
+		System.out.println("2.Borrower");
+		int option =0;
+	    boolean isValidOption = false;
+	    while (!isValidOption) {
+	    	if (in.hasNextInt()) {
+	    		option =in.nextInt();
+	    		in.nextLine(); 
+	    		if (option != 1 && option !=2) {
+	    			isValidOption=false;
+	    		}
+	    		isValidOption=true;
+	    	}
+	    	else {
+	    		System.out.println("Invalid option!! please  provide the valid option in numbers only..");
+	    		in.next();
+	    	}
+	    }
+		if (option==1) {
+			return new User(username,password,Role.Librarian);
+		}
+		return new User(username,password,Role.Borrower);
+	}
+	
 
+
+	public static void menu() {
+		System.out.println("1.Login as Librarian");
+		System.out.println("2.Login as User");
+		int option = in.nextInt();
+		in.nextLine();
+		String loginChoice ="";
+		switch(option) {
+			case 1:
+				loginChoice = "Librarian";
+				authenticate(loginChoice);
+				break;
+			case 2:
+				loginChoice="Borrower";
+				authenticate(loginChoice);
+				break;
+			case 0:
+	        	visitAgain();
+	            return;
+			default:
+				System.out.println("invalid input !! please try again...");
+		}
+		
 	    if (currentUser != null) {
 	        System.out.println("Welcome, " + currentUser.getUserName() + "!");
 	        
@@ -77,8 +190,9 @@ public class LibrarayManagementSystem {
 	        	break;
 	        case 5:
 	        	doPrintAllBookDetails();
+	        	break;
 	        case 0:
-	            System.out.println("Thanks for using the library!");
+	        	visitAgain();
 	            return;
 	        default:
 	            System.out.println("Invalid input. Please enter a valid choice.");
@@ -87,7 +201,7 @@ public class LibrarayManagementSystem {
 	    if (wantToContinue()) {
 	        librarianMenu();
 	    } else {
-	        System.out.println("Thanks for visiting the library! Come again sometime!");
+	    	visitAgain();
 	    }
 	}
 	
@@ -120,7 +234,7 @@ public class LibrarayManagementSystem {
                 doPrintAllBookDetails();
                 break;
 	        case 0:
-	            System.out.println("Thanks for using the library!");
+	        	visitAgain();
 	            return;
 	        default:
 	            System.out.println("Invalid input. Please enter a valid choice.");
@@ -129,26 +243,46 @@ public class LibrarayManagementSystem {
 	    if (wantToContinue()) {
 	        borrowerMenu();
 	    } else {
-	        System.out.println("Thanks for visiting the library! Come again sometime!");
+	        visitAgain();
 	    }
 	}
 
-	public static void authenticate() {
+	public static void authenticate(String  input) {
 	    System.out.println("Enter your username: ");
 	    String username = in.nextLine();
 	    System.out.println("Enter your password: ");
 	    String password = in.nextLine();
-
-	    for (User user : users) {
-	        if (user.getUserName().equals(username) && user.getPassword().equals(password)) {
-	            currentUser = user;
-	            return; 
-	        }
+	    String query="";
+	    if (input.equals("borrower")) {
+	    	query = "SELECT * FROM users WHERE username=? AND password=?";
+	    }else if (input.equals("Librarian")){
+	    	query = "SELECT * FROM admin WHERE username=? AND password=?";
 	    }
+	    
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-	    currentUser = null;
+	        preparedStatement.setString(1, username);
+	        preparedStatement.setString(2, password);
+
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            if (resultSet.next()) {
+	                String storedRole = resultSet.getString("role");
+	                Role role = Role.valueOf(storedRole); // Convert the stored role to Enum
+	                currentUser = new User(username, password, role);
+	                System.out.println("Authentication successful. Welcome, " + currentUser.getUserName() + "!");
+	            } else {
+	                System.out.println("Authentication failed. Exiting...");
+	                currentUser = null;
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        currentUser = null;
+	    }
 	}
-	
+
 	
 	private static void visitAgain() {
 		System.out.println("Thanks for coming to the library ,Come Again Sometime!!");
@@ -226,35 +360,36 @@ public class LibrarayManagementSystem {
 
 
 	private static void doUpdateBook() {
-	    System.out.println("To update the required book : ");
+	    System.out.println("To update the required book .Enter the book Id : ");
+	    int bookId = in.nextInt();
+	    in.nextLine();
+	    System.out.println("Enter the details to update book!");
 	    Book bookToUpdate = getBookInfo();
-	    for (int index1=0;index1<books.size();index1++) {
-	    	if(books.get(index1).equals(bookToUpdate)) {
-	    		books.remove(index1);
-	    		System.out.println("enter the details for the book");
-	    	    String newtitle = in.next();
-	    	    String newauthorName = in.next();
-	    	    long newISBN = in.nextLong();
-	    	    int newquantity = in.nextInt();
-	    		Book updatedBook=new Book(newtitle,newauthorName,newISBN,newquantity);
-	    		books.add(updatedBook);
-
-	    	}
-	    }	
+	    bookToUpdate.setId(bookId);
+	    boolean isUpdated = BookDAO.updateBook(bookToUpdate);
+	    if (isUpdated) {
+            System.out.println("Book updated  successfully.");
+        } else {
+            System.out.println("Failed to update book.");
+        }
 	}
 
 	private static void doAddBook() { 
 		System.out.println("To add the book : ");
 	    Book bookToAdd = getBookInfo();
 	    boolean isAdded = BookDAO.addBook(bookToAdd);
-
+	    System.out.println(isAdded);
         if (isAdded) {
             System.out.println("Book added successfully.");
         } else {
             System.out.println("Failed to add book.");
         }
 	}
+	
 
+	
+	
+	
 	private static Book getBookInfo() {
 		// TODO Auto-generated method stub
 		System.out.println("Enter the book details in order as title, author name, ISBN, Quantity:");
@@ -269,9 +404,9 @@ public class LibrarayManagementSystem {
 	    
 	    String authorName="";
 	    System.out.println("Enter the authorName for the book !");
-	    while (authorName.isEmpty() || !isalphabet(authorName)) {  	
+	    while (authorName.isEmpty() || !isAlphabet(authorName)) {  	
 	    	authorName = in.nextLine();
-	    	if (!isalphabet(authorName)) {
+	    	if (!isAlphabet(authorName)) {
 	    		System.out.println("Book authorName must contain only alphabet");
 	    	}
 	    	else if (authorName.isEmpty()) {
@@ -312,7 +447,7 @@ public class LibrarayManagementSystem {
 	}
 
 
-	public static boolean isalphabet(String input) {
+	public static boolean isAlphabet(String input) {
 		char [] charArray = input.toCharArray();
 		for (char ch:charArray) {
 			if (!Character.isLetter(ch)) {
@@ -324,9 +459,10 @@ public class LibrarayManagementSystem {
 	
 	private static void doRemoveBook() {
 	    System.out.println("To remove the book: ");
-	    Book bookToRemove = getBookInfo();
-	    if (books.contains(bookToRemove)) {
-	        books.remove(bookToRemove);
+	    int bookId =  in.nextInt();
+	    in.nextLine();
+	    boolean isremoved = BookDAO.removeBook(bookId);
+	    if (isremoved) {
 	        System.out.println("Book removed successfully.");
 	    } else {
 	        System.out.println("Book not found.");
