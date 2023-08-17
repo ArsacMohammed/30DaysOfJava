@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import dao.DatabaseConnection;
 import model.Book;
@@ -68,10 +70,10 @@ public class LibrarayManagementSystem {
 	        return false;
 	    }
 	}
-	private static void doAddAdmin() {
-		System.out.println("Enter the Admin credentials");
-		User adminToAdd = getUserInfo();
-		boolean isAdminAdded = BookDAO.addUser(adminToAdd);
+	private static void doAddUser() {
+		System.out.println("Add new users ! Enter the details..");
+		User userToAdd = getUserInfo();
+		boolean isAdminAdded = BookDAO.addUser(userToAdd);
 		if (isAdminAdded) {
 			System.out.println("Admin successfully added ");
 		}else {
@@ -81,7 +83,7 @@ public class LibrarayManagementSystem {
 	
 	private static User getUserInfo() {
 		// TODO Auto-generated method stub
-		System.out.println("Enter the ");
+		System.out.println("Enter the username");
 		String username="";
 		while(username.isEmpty() || !isAlphabet(username)) {
 			username = in.nextLine();
@@ -102,7 +104,7 @@ public class LibrarayManagementSystem {
 		
 		System.out.println("Are you a User or Admin");
 		System.out.println("1.Librarian");
-		System.out.println("2.Borrower");
+		System.out.println("2.User");
 		int option =0;
 	    boolean isValidOption = false;
 	    while (!isValidOption) {
@@ -164,11 +166,14 @@ public class LibrarayManagementSystem {
 	
 	public static void librarianMenu() {
 	    System.out.println("Librarian Menu:");
-	    System.out.println("1. Add a Book");
-	    System.out.println("2. Remove a Book");
-	    System.out.println("3. Update a Book");
-	    System.out.println("4. View all the Books");
-	    System.out.println("5. View complete Books details");
+	    System.out.println("1. Add a User");
+	    System.out.println("2. Add a Book");
+	    System.out.println("3. Remove a Book");
+	    System.out.println("4. Update a Book");
+	    System.out.println("5. View all the Books");
+	    System.out.println("6. View complete Books details");
+	    System.out.println("7. To restart the Librarian Menu");
+	    System.out.println("8. Return to Login page.");
 	    // other librarian menu options
 	    System.out.println("0. Exit");
 	    System.out.print("Enter your choice: ");
@@ -177,19 +182,30 @@ public class LibrarayManagementSystem {
 
 	    switch (option) {
 	        case 1:
-	            doAddBook();
+	        	doAddUser();
 	            break;
 	        case 2:
+	        	doAddBook();
+	        	break;
+	        case 3:
 	            doRemoveBook();
 	            break;
-	        case 3:
+	        case 4:
                 doUpdateBook();
                 break;
-	        case 4:
-	        	doPrintBookList();
-	        	break;
 	        case 5:
+	        	doPrintBooksTitle();
+	        	break;
+	        case 6:
 	        	doPrintAllBookDetails();
+	        	break;
+	        case 7:
+	        	System.out.println("Restarting the librarian menu.....");
+	        	librarianMenu();
+	        	
+	        case 8:
+	        	System.out.println("Returing to the login credentials");
+	        	menu();
 	        	break;
 	        case 0:
 	        	visitAgain();
@@ -212,8 +228,9 @@ public class LibrarayManagementSystem {
         System.out.println("3. Print all the Books");
         System.out.println("4. Print all the Books details");
         System.out.println("5. Return a book");
-        System.out.println("6. Borrowed Book list ");
-        System.out.println("7. Pay fine .");
+        System.out.println("6. Pay fine .");
+        System.out.println("7. Restart the borrower Menu.");
+        System.out.println("8. Return to the Login Page");
 	    System.out.println("0. Exit");
 	    System.out.print("Enter your choice: ");
 	    int option = in.nextInt();
@@ -221,18 +238,31 @@ public class LibrarayManagementSystem {
 
 	    switch (option) {
 	        case 1:
-	            doBookToBorrow(books, borrowers);
+	            doBookToBorrow();
 	            break;
 	        case 2:
             	String nameOfAuthor =in.nextLine();
                 doSearchByAuthor(nameOfAuthor);
                 break;
             case 3:
-                doPrintBookList();
+                doPrintBooksTitle();
                 break;
             case 4:
                 doPrintAllBookDetails();
                 break;
+            case 5:
+                doReturnBook();
+                break;
+            case 6:
+                doPayFine();
+                break;
+            case 7:
+            	System.out.println("Restarting the Borrower Menu....");
+            	borrowerMenu();
+            case 8:
+            	System.out.println("Returning to the Login Page");
+            	menu();
+            	break;
 	        case 0:
 	        	visitAgain();
 	            return;
@@ -247,13 +277,71 @@ public class LibrarayManagementSystem {
 	    }
 	}
 
+
+
+	private static void doPayFine() {
+	    System.out.println("To pay fine:");
+	    Borrower borrower = getBorrowerInfo();
+	    
+	    double fineAmount = BookDAO.getFineAmount(borrower.getUuid()); // Get the fine amount from the database
+
+	    if (fineAmount > 0) {
+	        System.out.println("Fine amount to be paid: $" + fineAmount);
+	        
+	        // Here you can implement the logic for payment
+	        // For example, ask the user to enter the payment amount and update the fine_payable and fine_paid fields
+	        // in the borrower table
+	        
+	        double paymentAmount = 0.0; // Assume the user enters the payment amount
+	        
+	        if (paymentAmount >= fineAmount) {
+	            // Update the fine_payable and fine_paid fields in the database
+	            boolean paymentSuccess = BookDAO.payFine(borrower, fineAmount);
+	            
+	            if (paymentSuccess) {
+	                System.out.println("Fine paid successfully.");
+	            } else {
+	                System.out.println("Failed to pay fine.");
+	            }
+	        } else {
+	            System.out.println("Payment amount is less than the fine amount.");
+	        }
+	    } else {
+	        System.out.println("No fine to be paid.");
+	    }
+	}
+
+
+
+	private static void doReturnBook() {
+	    System.out.println("To return a book:");
+	    
+	    // Get the book UUID and return date from the user
+	    System.out.println("Enter the book UUID: ");
+	    UUID bookUuid = UUID.fromString(in.nextLine());
+
+	    System.out.println("Enter the return date (yyyy-MM-dd): ");
+	    String returnDateStr = in.nextLine();
+	    LocalDate returnDate = LocalDate.parse(returnDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+	    // Call the returnBook method
+	    boolean isReturned = BookDAO.returnBook(bookUuid, java.sql.Date.valueOf(returnDate));
+
+	    if (isReturned) {
+	        System.out.println("Book returned successfully.");
+	    } else {
+	        System.out.println("Failed to return book.");
+	    }
+	}
+
+
 	public static void authenticate(String  input) {
 	    System.out.println("Enter your username: ");
 	    String username = in.nextLine();
 	    System.out.println("Enter your password: ");
 	    String password = in.nextLine();
 	    String query="";
-	    if (input.equals("borrower")) {
+	    if (input.equals("Borrower")) {
 	    	query = "SELECT * FROM users WHERE username=? AND password=?";
 	    }else if (input.equals("Librarian")){
 	    	query = "SELECT * FROM admin WHERE username=? AND password=?";
@@ -302,47 +390,77 @@ public class LibrarayManagementSystem {
     }
 
 	private static void doPrintAllBookDetails() {
+		List<Book> books = BookDAO.getAllBooks();
+		
 		for (Book book :books) {
-			System.out.println(book.title+" "+book.authorName+" "+book.ISBN+" "+book.quantity);
+			System.out.println(book.getId()+" "+book.getUuid()+" "+book.getTitle()+" "+book.getAuthor()+" "+book.getISBN()+" "+book.getQuantity()+" "+book.getStatus());
 		}
 		
 	}
 	
-    public static void doPrintBookList() {
-        System.out.println("Book List:");
-        for (int i = 0; i < books.size(); i++) {
-            System.out.println("Index " + i + ": " + books.get(i).getTitle());
+    public static void doPrintBooksTitle() {
+        List<Book> books = BookDAO.getAllBooks();
+        for (Book book:books) {
+        	System.out.println(book.getId()+" "+book.getTitle());
         }
     }
-	private static void doBookToBorrow(ArrayList<Book>books,ArrayList<Borrower>borrowers) {
-		
-		System.out.println("To borrow first check for book availability");
-		Book checkBook =getBookInfo();
-		for (Book book:books) {
-			if (book.equals(checkBook)) {
-				System.out.println("book found");
-				System.out.println("tell your(borrowwer) details");
-				String name =in.next();
-				int contactDetails =in.nextInt();
-				int id =in.nextInt();
-				int borrowingHistory = in.nextInt();
-				Borrower borrower1 =new Borrower(name,contactDetails,id,borrowingHistory);	
-	            System.out.println("Do you want to borrow? (Enter 'true' or 'false')");
-	            boolean borrowOption = in.nextBoolean();
-	
-				if (borrowOption) {
-					borrowers.add(borrower1);
-					book.quantity=(book.quantity)-1;
-					System.out.println("nice borrowed");
+    private static void doBookToBorrow() {
+        System.out.println("To borrow, first check for book availability:");
+        Book checkBook = getBookInfo();
+        Borrower borrowerToAdd = getBorrowerInfo();
+        boolean isBorrowed = BookDAO.borrowBook(checkBook, borrowerToAdd);
 
-				}else {
-					System.out.println("some error please retype the book details");
-					doBookToBorrow(books,borrowers);
-				}
-			}
+        if (isBorrowed) {
+            System.out.println("Successfully borrowed!");
+        } else {
+            System.out.println("Book not found, could not be borrowed, or quantity is zero.");
+        }
+    }
+
+    
+	private static Borrower getBorrowerInfo() {
+		// TODO Auto-generated method stubSystem.out.println("Enter the book details in order as title, author name, ISBN, Quantity:");
+	    System.out.println("Enter the borrower name !");
+ 	    String borrowerName="";
+	    System.out.println("Enter the Borrower Name for the book !");
+	    while (borrowerName.isEmpty() || !isAlphabet(borrowerName)) {  	
+	    	borrowerName = in.nextLine();
+	    	if (!isAlphabet(borrowerName)) {
+	    		System.out.println("Book borrowername must contain only alphabet");
+	    	}
+	    	else if (borrowerName.isEmpty()) {
+	            System.out.println("Book borrowername cannot be empty.");
+	        }
+	    }
+	    
+	    System.out.println("Enter the contact Number of the borrower (10 digits)!");
+	    String contactNumber = "";
+	    while (contactNumber.isEmpty() || !isNumeric(contactNumber)) {  	
+	    	contactNumber=in.nextLine();
+	    	if (contactNumber.isEmpty()) {
+	            System.out.println("contact number can not be empty.");
+	        }else {
+	        	System.out.println("contact Number can only be numbers ");
+	        }
+	    }
+	    System.out.println("book returned");
+		return new Borrower(borrowerName,contactNumber);
+	}
+
+
+	public static boolean isNumeric(String str) {
+		if (str.length()>10) {
+			System.out.println("Contact Number must be within 10 digits!");
+			return false;
 		}
-		
-	}	
+	    for (char c : str.toCharArray()) {
+	        if (!Character.isDigit(c)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+
 
 	private static int doSearchByAuthor(String authorName) {
 		ArrayList<Book> searchResult = new ArrayList<Book>();
@@ -360,32 +478,45 @@ public class LibrarayManagementSystem {
 
 
 	private static void doUpdateBook() {
-	    System.out.println("To update the required book .Enter the book Id : ");
-	    int bookId = in.nextInt();
-	    in.nextLine();
-	    System.out.println("Enter the details to update book!");
+	    System.out.println("Enter the new details for the book updation:");
 	    Book bookToUpdate = getBookInfo();
-	    bookToUpdate.setId(bookId);
+	    
+	    // Retrieve the UUID of the book to update
+	    System.out.println("Enter the UUID of the book to update:");
+	    String uuidString = in.nextLine();
+	    
+	    try {
+	        UUID uuid = UUID.fromString(uuidString);
+	        bookToUpdate.setUuid(uuid);
+	    } catch (IllegalArgumentException e) {
+	        System.out.println("Invalid UUID format.");
+	        return;
+	    }
+	    
 	    boolean isUpdated = BookDAO.updateBook(bookToUpdate);
 	    if (isUpdated) {
-            System.out.println("Book updated  successfully.");
-        } else {
-            System.out.println("Failed to update book.");
-        }
+	        System.out.println("Book updated successfully.");
+	    } else {
+	        System.out.println("Failed to update book.");
+	    }
 	}
 
+
 	private static void doAddBook() { 
-		System.out.println("To add the book : ");
-	    Book bookToAdd = getBookInfo();
-	    boolean isAdded = BookDAO.addBook(bookToAdd);
-	    System.out.println(isAdded);
+        System.out.println("To add the book:");
+        Book bookToAdd = getBookInfo();
+        
+        // Generate a UUID for the new book
+        UUID bookId = UUID.randomUUID();
+        bookToAdd.setUuid(bookId);
+
+        boolean isAdded = BookDAO.addBook(bookToAdd);
         if (isAdded) {
             System.out.println("Book added successfully.");
         } else {
             System.out.println("Failed to add book.");
         }
-	}
-	
+    }
 
 	
 	
@@ -458,16 +589,16 @@ public class LibrarayManagementSystem {
 	}
 	
 	private static void doRemoveBook() {
-	    System.out.println("To remove the book: ");
-	    int bookId =  in.nextInt();
-	    in.nextLine();
-	    boolean isremoved = BookDAO.removeBook(bookId);
-	    if (isremoved) {
+	    System.out.println("To remove the book, enter the book UUID: ");
+	    UUID bookId = UUID.fromString(in.nextLine());
+
+	    boolean isRemoved = BookDAO.removeBook(bookId);
+	    if (isRemoved) {
 	        System.out.println("Book removed successfully.");
 	    } else {
-	        System.out.println("Book not found.");
+	        System.out.println("Book not found or could not be removed.");
 	    }
-	   	    
 	}
+
 	
 }

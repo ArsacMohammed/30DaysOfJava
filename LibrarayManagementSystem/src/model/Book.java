@@ -5,12 +5,15 @@ public class Book {
 	public String authorName;
 	public long ISBN ;
 	public int quantity;
-	public  int ID;
+	public  UUID uuid;
+	int id;
+	String status;
 	public Book(String title,String authorName,long ISBN ,int quantity) {
 		this.title=title;
 		this.authorName=authorName;
 		this.ISBN=ISBN;
 		this.quantity=quantity;
+		this.id =id;
 	}
 	public String  getTitle() {
 		return title;
@@ -61,13 +64,39 @@ public class Book {
 		return true;
 	}
 
-	public void setId(int ID) {
-	    this.ID = ID;
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+    
+    public int getId() {
+    	return id;
+    }
+    public void setId(int id) {
+    	this.id=id;
+    }
+    
+	public void setStatus(String status) {
+		// TODO Auto-generated method stub
+		this.status=status;
 	}
-	public int getId() {
-		return ID;
+	public String getStatus() {
+		// TODO Auto-generated method stub
+		return status;
 	}
+
+}
+
+
+
+
+
+
+
 	
 	
 
-}
+

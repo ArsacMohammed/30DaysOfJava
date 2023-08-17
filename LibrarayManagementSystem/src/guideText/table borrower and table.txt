@@ -1,0 +1,22 @@
+CREATE TABLE borrower (
+    id BIGSERIAL PRIMARY KEY,
+    uuid UUID NOT NULL DEFAULT uuid_generate_v4(),
+    borrower_name VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(20) NOT NULL,
+    issue_date DATE DEFAULT CURRENT_DATE,
+    due_date DATE DEFAULT (CURRENT_DATE + INTERVAL '10 days'),
+    return_date DATE,
+    fine_payable DECIMAL(10, 2),
+    fine_paid BOOLEAN
+);
+
+
+CREATE TABLE books (
+    id BIGSERIAL PRIMARY KEY,
+    uuid UUID NOT NULL DEFAULT uuid_generate_v4(), -- Generate a UUID by default
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    isbn BIGINT NOT NULL,
+    quantity INT NOT NULL,
+    status varchar (20) default 'available'
+);
