@@ -42,7 +42,7 @@ public class BookDAO {
        
 
     
-	public static boolean returnBook(UUID bookUuid, Date returnDate) {
+	public static boolean returnBook(UUID bookUuid, UUID borrowerUuid, Date returnDate) {
 	    Connection connection = null;
 	    PreparedStatement returnStatement = null;
 
@@ -51,9 +51,10 @@ public class BookDAO {
 	        connection.setAutoCommit(false); // Start a transaction
 
 	        // Get the borrower information
-	        String borrowerQuery = "SELECT id, due_date FROM borrower WHERE book_uuid = ? AND return_date IS NULL";
+	        String borrowerQuery = "SELECT id, due_date FROM borrower WHERE book_uuid = ? AND uuid = ? AND return_date IS NULL";
 	        PreparedStatement borrowerStatement = connection.prepareStatement(borrowerQuery);
 	        borrowerStatement.setObject(1, bookUuid, Types.OTHER);
+	        borrowerStatement.setObject(2, borrowerUuid, Types.OTHER);
 	        ResultSet borrowerResult = borrowerStatement.executeQuery();
 
 	        if (borrowerResult.next()) {
@@ -111,6 +112,8 @@ public class BookDAO {
 	    }
 	    return false;
 	}
+
+
 
 
 

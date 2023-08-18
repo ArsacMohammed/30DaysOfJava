@@ -4,14 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.sql.Date;
 import java.util.*;
 import dao.DatabaseConnection;
 import model.Book;
 import model.Borrower;
 import model.User;
 import model.Role;
+import java.util.UUID;
 import dao.BookDAO;
 public class LibrarayManagementSystem {
 	
@@ -315,17 +315,17 @@ public class LibrarayManagementSystem {
 
 	private static void doReturnBook() {
 	    System.out.println("To return a book:");
-	    
-	    // Get the book UUID and return date from the user
+	    System.out.println("Enter the borrower UUID: ");
+	    UUID borrowerUuid = UUID.fromString(in.nextLine());
+
+	    // Assuming you have a method to get book UUID and borrower ID
 	    System.out.println("Enter the book UUID: ");
 	    UUID bookUuid = UUID.fromString(in.nextLine());
 
-	    System.out.println("Enter the return date (yyyy-MM-dd): ");
-	    String returnDateStr = in.nextLine();
-	    LocalDate returnDate = LocalDate.parse(returnDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-	    // Call the returnBook method
-	    boolean isReturned = BookDAO.returnBook(bookUuid, java.sql.Date.valueOf(returnDate));
+	    Date returnDate = new Date(System.currentTimeMillis());
+	    
+	    boolean isReturned = BookDAO.returnBook(bookUuid, borrowerUuid, returnDate);
 
 	    if (isReturned) {
 	        System.out.println("Book returned successfully.");
@@ -333,7 +333,6 @@ public class LibrarayManagementSystem {
 	        System.out.println("Failed to return book.");
 	    }
 	}
-
 
 	public static void authenticate(String  input) {
 	    System.out.println("Enter your username: ");
