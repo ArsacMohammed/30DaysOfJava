@@ -16,8 +16,6 @@ import dao.BookDAO;
 public class LibrarayManagementSystem {
 	
 	static Scanner in =new Scanner(System.in);
-	static ArrayList<Book> books =new ArrayList<Book>();
-	static ArrayList<Borrower> borrowers =new ArrayList<Borrower>();
 	static boolean choice =false;
 	static User currentUser =null;
 	
@@ -33,7 +31,7 @@ public class LibrarayManagementSystem {
 
 	    do {
 	        menu();
-	        System.out.println("If you want to continue using the menu, enter 1; otherwise, enter 2");
+	        System.out.println("Enter 1 to continue or 2 to exit");
 	        int menuChoice = 0;
 	        while (menuChoice != 1 && menuChoice != 2) {
 	            menuChoice = in.nextInt();
@@ -75,60 +73,12 @@ public class LibrarayManagementSystem {
 		User userToAdd = getUserInfo();
 		boolean isAdminAdded = BookDAO.addUser(userToAdd);
 		if (isAdminAdded) {
-			System.out.println("Admin successfully added ");
+			System.out.println(" successfully added ");
 		}else {
 			System.out.println("Something went wwrong ! please try it again!");
 		}
 	}
 	
-	private static User getUserInfo() {
-		// TODO Auto-generated method stub
-		System.out.println("Enter the username");
-		String username="";
-		while(username.isEmpty() || !isAlphabet(username)) {
-			username = in.nextLine();
-			if (!isAlphabet(username)) {
-	    		System.out.println("Book username must contain only alphabet");
-	    	}
-	    	else if (username.isEmpty()) {
-	            System.out.println("Book username cannot be empty.");
-	        }
-		}
-		String password ="";
-		while(password.isEmpty()) {
-			password = in.nextLine();
-			if (username.isEmpty()) {
-	            System.out.println("Book password cannot be empty.");
-	        }
-		}
-		
-		System.out.println("Are you a User or Admin");
-		System.out.println("1.Librarian");
-		System.out.println("2.User");
-		int option =0;
-	    boolean isValidOption = false;
-	    while (!isValidOption) {
-	    	if (in.hasNextInt()) {
-	    		option =in.nextInt();
-	    		in.nextLine(); 
-	    		if (option != 1 && option !=2) {
-	    			isValidOption=false;
-	    		}
-	    		isValidOption=true;
-	    	}
-	    	else {
-	    		System.out.println("Invalid option!! please  provide the valid option in numbers only..");
-	    		in.next();
-	    	}
-	    }
-		if (option==1) {
-			return new User(username,password,Role.Librarian);
-		}
-		return new User(username,password,Role.Borrower);
-	}
-	
-
-
 	public static void menu() {
 		System.out.println("1.Login as Librarian");
 		System.out.println("2.Login as User");
@@ -174,11 +124,11 @@ public class LibrarayManagementSystem {
 	    System.out.println("6. View complete Books details");
 	    System.out.println("7. To restart the Librarian Menu");
 	    System.out.println("8. Return to Login page.");
-	    // other librarian menu options
+	    
 	    System.out.println("0. Exit");
 	    System.out.print("Enter your choice: ");
 	    int option = in.nextInt();
-	    in.nextLine(); // Consume newline
+	    in.nextLine(); 
 
 	    switch (option) {
 	        case 1:
@@ -223,14 +173,16 @@ public class LibrarayManagementSystem {
 	
 	public static void borrowerMenu() {
 	    System.out.println("Borrower Menu:");
-	    System.out.println("1. Borrow a Book");      
-        System.out.println("2. Search for a book ");
-        System.out.println("3. Print all the Books");
-        System.out.println("4. Print all the Books details");
-        System.out.println("5. Return a book");
-        System.out.println("6. Pay fine .");
-        System.out.println("7. Restart the borrower Menu.");
-        System.out.println("8. Return to the Login Page");
+	    System.out.println("1. Borrow a Book");  
+	    System.out.println("2. Search book by Author"); 
+	    System.out.println("3. Search book by title"); 
+        System.out.println("4. Search book by ISBN ");
+        System.out.println("5. Print all the Books");
+        System.out.println("6. Print all the Books details");
+        System.out.println("7. Return a book");
+        System.out.println("8. Pay fine .");
+        System.out.println("9. Restart the borrower Menu.");
+        System.out.println("10. Return to the Login Page");
 	    System.out.println("0. Exit");
 	    System.out.print("Enter your choice: ");
 	    int option = in.nextInt();
@@ -241,25 +193,31 @@ public class LibrarayManagementSystem {
 	            doBookToBorrow();
 	            break;
 	        case 2:
-            	String nameOfAuthor =in.nextLine();
-                doSearchByAuthor(nameOfAuthor);
+                doSearchBookByAuthor();
                 break;
-            case 3:
-                doPrintBooksTitle();
+	        case 3:
+                doSearchBookByTitle();
                 break;
-            case 4:
-                doPrintAllBookDetails();
+	        case 4:
+                doSearchBookByISBN();
                 break;
             case 5:
-                doReturnBook();
+                doPrintBooksTitle();
                 break;
             case 6:
-                doPayFine();
+                doPrintAllBookDetails();
                 break;
             case 7:
+                doReturnBook();
+                break;
+            case 8:
+                doPayFine();
+                break;
+            case 9:
             	System.out.println("Restarting the Borrower Menu....");
             	borrowerMenu();
-            case 8:
+            	break;
+            case 10:
             	System.out.println("Returning to the Login Page");
             	menu();
             	break;
@@ -282,22 +240,20 @@ public class LibrarayManagementSystem {
 	private static void doPayFine() {
 	    System.out.println("To pay fine:");
 	    Borrower borrower = getBorrowerInfo();
-	    
-	    double fineAmount = BookDAO.getFineAmount(borrower.getUuid()); // Get the fine amount from the database
+
+	    double fineAmount = BookDAO.getFineAmount(borrower.getUuid()); 
 
 	    if (fineAmount > 0) {
 	        System.out.println("Fine amount to be paid: $" + fineAmount);
-	        
-	        // Here you can implement the logic for payment
-	        // For example, ask the user to enter the payment amount and update the fine_payable and fine_paid fields
-	        // in the borrower table
-	        
-	        double paymentAmount = 0.0; // Assume the user enters the payment amount
-	        
+
+	        double paymentAmount = 0.0; 
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.print("Enter payment amount: ");
+	        paymentAmount = scanner.nextDouble();
+
 	        if (paymentAmount >= fineAmount) {
-	            // Update the fine_payable and fine_paid fields in the database
 	            boolean paymentSuccess = BookDAO.payFine(borrower, fineAmount);
-	            
+
 	            if (paymentSuccess) {
 	                System.out.println("Fine paid successfully.");
 	            } else {
@@ -306,10 +262,13 @@ public class LibrarayManagementSystem {
 	        } else {
 	            System.out.println("Payment amount is less than the fine amount.");
 	        }
+
+	        scanner.close(); 
 	    } else {
 	        System.out.println("No fine to be paid.");
 	    }
 	}
+
 
 
 
@@ -318,7 +277,6 @@ public class LibrarayManagementSystem {
 	    System.out.println("Enter the borrower UUID: ");
 	    UUID borrowerUuid = UUID.fromString(in.nextLine());
 
-	    // Assuming you have a method to get book UUID and borrower ID
 	    System.out.println("Enter the book UUID: ");
 	    UUID bookUuid = UUID.fromString(in.nextLine());
 
@@ -355,7 +313,7 @@ public class LibrarayManagementSystem {
 	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
 	            if (resultSet.next()) {
 	                String storedRole = resultSet.getString("role");
-	                Role role = Role.valueOf(storedRole); // Convert the stored role to Enum
+	                Role role = Role.valueOf(storedRole); 
 	                currentUser = new User(username, password, role);
 	                System.out.println("Authentication successful. Welcome, " + currentUser.getUserName() + "!");
 	            } else {
@@ -411,6 +369,7 @@ public class LibrarayManagementSystem {
 
         if (isBorrowed) {
             System.out.println("Successfully borrowed!");
+            
         } else {
             System.out.println("Book not found, could not be borrowed, or quantity is zero.");
         }
@@ -418,7 +377,6 @@ public class LibrarayManagementSystem {
 
     
 	private static Borrower getBorrowerInfo() {
-		// TODO Auto-generated method stubSystem.out.println("Enter the book details in order as title, author name, ISBN, Quantity:");
 	    System.out.println("Enter the borrower name !");
  	    String borrowerName="";
 	    System.out.println("Enter the Borrower Name for the book !");
@@ -438,7 +396,7 @@ public class LibrarayManagementSystem {
 	    	contactNumber=in.nextLine();
 	    	if (contactNumber.isEmpty()) {
 	            System.out.println("contact number can not be empty.");
-	        }else {
+	        }else if (!isNumeric(contactNumber)) {
 	        	System.out.println("contact Number can only be numbers ");
 	        }
 	    }
@@ -461,17 +419,55 @@ public class LibrarayManagementSystem {
 	}
 
 
-	private static int doSearchByAuthor(String authorName) {
-		ArrayList<Book> searchResult = new ArrayList<Book>();
-		for (Book book:books) {
-			if(book.getAuthor().equals(authorName)) {
-				searchResult.add(book);
-			}			
-		}
-		for (Book book :searchResult) {
-			System.out.println(book.getTitle()+" "+book.getAuthor());
-		}
-		return searchResult.size();
+	private static void doSearchBookByTitle() {
+	    System.out.println("Enter the title to search for:");
+	    String title = in.nextLine();
+	    List<Book> books = BookDAO.searchByTitle(title);
+	    displayBooks(books);
+	}
+
+	private static void doSearchBookByAuthor() {
+	    System.out.println("Enter the author to search for:");
+	    String author = in.nextLine();
+	    
+	    if (!isAlphabet(author)) {
+	        System.out.println("Invalid input. Author name should contain only alphabetic characters.");
+	        return;
+	    }
+	    
+	    List<Book> books = BookDAO.searchByAuthor(author);
+	    displayBooks(books);
+	}
+
+	private static void doSearchBookByISBN() {
+	    System.out.println("Enter the ISBN to search for:");
+	    
+	    long isbn = 0;
+	    boolean validInput = false;
+
+	    while (!validInput) {
+	        try {
+	            isbn = Long.parseLong(in.nextLine());
+	            in.nextLine();
+	            validInput = true;
+	        } catch (NumberFormatException e) {
+	            System.out.println("Invalid input. Please enter a valid ISBN (a number):");
+	        }
+	    }
+	    
+	    List<Book> books = BookDAO.searchByISBN(isbn);
+	    displayBooks(books);
+	}
+
+
+	private static void displayBooks(List<Book> books) {
+	    if (books.isEmpty()) {
+	        System.out.println("No books found.");
+	    } else {
+	        for (Book book : books) {
+	            System.out.println(book);
+	        }
+	    }
 	}
 
 
@@ -480,7 +476,7 @@ public class LibrarayManagementSystem {
 	    System.out.println("Enter the new details for the book updation:");
 	    Book bookToUpdate = getBookInfo();
 	    
-	    // Retrieve the UUID of the book to update
+	    
 	    System.out.println("Enter the UUID of the book to update:");
 	    String uuidString = in.nextLine();
 	    
@@ -505,7 +501,7 @@ public class LibrarayManagementSystem {
         System.out.println("To add the book:");
         Book bookToAdd = getBookInfo();
         
-        // Generate a UUID for the new book
+       
         UUID bookId = UUID.randomUUID();
         bookToAdd.setUuid(bookId);
 
@@ -521,7 +517,7 @@ public class LibrarayManagementSystem {
 	
 	
 	private static Book getBookInfo() {
-		// TODO Auto-generated method stub
+		
 		System.out.println("Enter the book details in order as title, author name, ISBN, Quantity:");
 	    System.out.println("Enter the title of the book !");
 	    String title = "";
@@ -550,10 +546,11 @@ public class LibrarayManagementSystem {
 	    while (!isvalid) {
 	    	try {
 	    		ISBN = in.nextLong();
+	    		in.nextLine();
 	    		isvalid =true;
 	    	}catch(InputMismatchException e){
 	    		System.out.println("Invalid ISBN ! provide valid input");
-	    		in.next(); // Consume invalid input to avoid an infinite loop
+	    		in.next(); 
 	    	}
 	    }
 	    
@@ -574,6 +571,53 @@ public class LibrarayManagementSystem {
 	    	}
 	    }
 	    return new Book (title,authorName,ISBN,quantity);
+	}
+
+
+	private static User getUserInfo() {
+	
+	    System.out.println("Enter the username");
+	    String username = "";
+	    while (username.isEmpty() || !isAlphabet(username)) {
+	        username = in.nextLine();
+	        if (username.isEmpty()) {
+	            System.out.println("Book username cannot be empty.");
+	        } else if (!isAlphabet(username)) {
+	            System.out.println("Book username must contain only alphabet");
+	        }
+	    }
+		String password ="";
+		while(password.isEmpty()) {
+			password = in.nextLine();
+			if (username.isEmpty()) {
+	            System.out.println("Book password cannot be empty.");
+	        }
+		}
+		
+		System.out.println("Are you a User or Admin");
+		System.out.println("1.Librarian");
+		System.out.println("2.User");
+		int option =0;
+	    boolean isValidOption = false;
+	    while (!isValidOption) {
+	    	if (in.hasNextInt()) {
+	    		option =in.nextInt();
+	    		in.nextLine(); 
+	    		if (option != 1 && option !=2) {
+	    			isValidOption=false;
+	    		}else {
+	    		isValidOption=true;
+	    		}
+	    	}
+	    	else {
+	    		System.out.println("Invalid option!! please  provide the valid option in numbers only..");
+	    		in.next();
+	    	}
+	    }
+		if (option==1) {
+			return new User(username,password,Role.Librarian);
+		}
+		return new User(username,password,Role.Borrower);
 	}
 
 

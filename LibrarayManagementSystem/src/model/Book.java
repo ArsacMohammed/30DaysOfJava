@@ -28,42 +28,6 @@ public class Book {
 		return quantity;
 	}
 	
-
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(title,authorName,ISBN,quantity);
-	
-	}
-	
-
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Book other = (Book) obj;
-		if (ISBN != other.ISBN)
-			return false;
-		if (authorName == null) {
-			if (other.authorName != null)
-				return false;
-		} else if (!authorName.equals(other.authorName))
-			return false;
-		if (quantity != other.quantity)
-			return false;
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		} else if (!title.equals(other.title))
-			return false;
-		return true;
-	}
-
     public UUID getUuid() {
         return uuid;
     }
@@ -87,6 +51,23 @@ public class Book {
 		// TODO Auto-generated method stub
 		return status;
 	}
+	
+
+
+	    @Override
+	    public String toString() {
+	        return "Book{" +
+	                "id=" + id +
+	                ", uuid=" + uuid +
+	                ", title='" + title + '\'' +
+	                ", author='" + authorName + '\'' +
+	                ", isbn=" + ISBN +
+	                ", quantity=" + quantity +
+	                ", status='" + status + '\'' +
+	                '}';
+	    }
+	
+
 
 }
 

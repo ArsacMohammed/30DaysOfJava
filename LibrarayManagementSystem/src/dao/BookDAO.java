@@ -2,19 +2,21 @@ package dao;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.time.temporal.ChronoUnit;
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import model.Book;
-import java.util.*;
-import model.User;
-import model.Role;
 import model.Borrower;
+import model.Role;
+import model.User;
 
 public class BookDAO {
 	public static boolean addBook(Book book) {
@@ -27,7 +29,7 @@ public class BookDAO {
 	        preparedStatement.setString(2, book.getAuthor());
 	        preparedStatement.setLong(3, book.getISBN());
 	        preparedStatement.setInt(4, book.getQuantity());
-	        preparedStatement.setString(5, "available"); // Set initial status
+	        preparedStatement.setString(5, "available"); 
 
 	        int rowsAffected = preparedStatement.executeUpdate();
 	        return  rowsAffected > 0; 
@@ -48,20 +50,20 @@ public class BookDAO {
 
 	    try {
 	        connection = DatabaseConnection.getConnection();
-	        connection.setAutoCommit(false); // Start a transaction
+	        connection.setAutoCommit(false); 
 
-	        // Get the borrower information
+	        
 	        String borrowerQuery = "SELECT id, due_date FROM borrower WHERE book_uuid = ? AND uuid = ? AND return_date IS NULL";
 	        PreparedStatement borrowerStatement = connection.prepareStatement(borrowerQuery);
 	        borrowerStatement.setObject(1, bookUuid, Types.OTHER);
 	        borrowerStatement.setObject(2, borrowerUuid, Types.OTHER);
 	        ResultSet borrowerResult = borrowerStatement.executeQuery();
-
+	        
 	        if (borrowerResult.next()) {
 	            int borrowerId = borrowerResult.getInt("id");
 	            Date dueDate = borrowerResult.getDate("due_date");
 
-	            // Calculate fines if return date is beyond due date
+	            // Calculate fines if return date is beyond the due date
 	            BigDecimal fineAmount = BigDecimal.ZERO;
 	            if (returnDate.after(dueDate)) {
 	                long daysLate = ChronoUnit.DAYS.between(dueDate.toLocalDate(), returnDate.toLocalDate());
@@ -78,13 +80,13 @@ public class BookDAO {
 	            int rowsAffected = returnStatement.executeUpdate();
 
 	            if (rowsAffected > 0) {
-	                // Update the book status and quantity
+	                
 	                String updateBookQuery = "UPDATE books SET status = 'available', quantity = quantity + 1 WHERE uuid = ?";
 	                PreparedStatement updateBookStatement = connection.prepareStatement(updateBookQuery);
 	                updateBookStatement.setObject(1, bookUuid, Types.OTHER);
 	                updateBookStatement.executeUpdate();
 
-	                connection.commit(); // Commit the transaction
+	                connection.commit();
 	                return true;
 	            }
 	        }
@@ -92,7 +94,7 @@ public class BookDAO {
 	        e.printStackTrace();
 	        if (connection != null) {
 	            try {
-	                connection.rollback(); // Rollback the transaction if an exception occurs
+	                connection.rollback(); 
 	            } catch (SQLException rollbackException) {
 	                rollbackException.printStackTrace();
 	            }
@@ -103,7 +105,7 @@ public class BookDAO {
 	                returnStatement.close();
 	            }
 	            if (connection != null) {
-	                connection.setAutoCommit(true); // Restore default auto-commit
+	                connection.setAutoCommit(true); 
 	                connection.close();
 	            }
 	        } catch (SQLException e) {
@@ -160,9 +162,9 @@ public class BookDAO {
 
         try {
             connection = DatabaseConnection.getConnection();
-            connection.setAutoCommit(false); // Start a transaction
+            connection.setAutoCommit(false); 
 
-            // Check if the book exists and is available
+    
             String checkQuery = "SELECT uuid, quantity FROM books WHERE title = ? AND status = 'available'";
             PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
             checkStatement.setString(1, book.getTitle());
@@ -173,14 +175,12 @@ public class BookDAO {
                 int bookQuantity = checkResult.getInt("quantity");
 
                 if (bookQuantity == 1) {
-                    // Update the status of the book to 'borrowed' if quantity becomes zero
                     String updateStatusQuery = "UPDATE books SET status = 'borrowed' WHERE uuid = ?";
                     PreparedStatement updateStatusStatement = connection.prepareStatement(updateStatusQuery);
                     updateStatusStatement.setObject(1, bookUuid, Types.OTHER);
                     updateStatusStatement.executeUpdate();
                 }
 
-                // Insert into the borrowed_books table
                 String borrowQuery = "INSERT INTO borrower (uuid, borrower_name, contact_number, book_uuid, issue_date, due_date) VALUES (?, ?, ?, ?, NOW(), NOW() + INTERVAL '10 days')";
                 borrowStatement = connection.prepareStatement(borrowQuery, Statement.RETURN_GENERATED_KEYS);
                 UUID borrowUuid = UUID.randomUUID();
@@ -192,14 +192,13 @@ public class BookDAO {
                 int rowsAffected = borrowStatement.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    // Update the book's quantity
                     String updateQuantityQuery = "UPDATE books SET quantity = ? WHERE uuid = ?";
                     PreparedStatement updateQuantityStatement = connection.prepareStatement(updateQuantityQuery);
                     updateQuantityStatement.setInt(1, bookQuantity - 1);
                     updateQuantityStatement.setObject(2, bookUuid, Types.OTHER);
                     updateQuantityStatement.executeUpdate();
 
-                    connection.commit(); // Commit the transaction
+                    connection.commit(); 
                     return true;
                 }
             }
@@ -207,7 +206,7 @@ public class BookDAO {
             e.printStackTrace();
             if (connection != null) {
                 try {
-                    connection.rollback(); // Rollback the transaction if an exception occurs
+                    connection.rollback(); 
                 } catch (SQLException rollbackException) {
                     rollbackException.printStackTrace();
                 }
@@ -218,7 +217,7 @@ public class BookDAO {
                     borrowStatement.close();
                 }
                 if (connection != null) {
-                    connection.setAutoCommit(true); // Restore default auto-commit
+                    connection.setAutoCommit(true);
                     connection.close();
                 }
             } catch (SQLException e) {
@@ -256,8 +255,8 @@ public class BookDAO {
     public static boolean removeBook(UUID bookId) {
         String updateQuery = "UPDATE books SET status = 'removed' WHERE uuid = ?";
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
-
+            ) {
+        	 PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
             updateStatement.setObject(1, bookId);
             int rowsAffected = updateStatement.executeUpdate();
 
@@ -285,12 +284,12 @@ public class BookDAO {
                 long isbn = resultSet.getLong("isbn");
                 int quantity = resultSet.getInt("quantity");
                 UUID uuid = (UUID) resultSet.getObject("uuid");
-                String status = resultSet.getString("status"); // Retrieve the status from the database
+                String status = resultSet.getString("status"); 
                 
                 Book book = new Book(title, author, isbn, quantity);
                 book.setId(id);
-                book.setUuid(uuid); // Set the UUID for the book
-                book.setStatus(status); // Set the retrieved status
+                book.setUuid(uuid); 
+                book.setStatus(status); 
                 books.add(book);
             }
 
@@ -329,14 +328,73 @@ public class BookDAO {
             if (resultSet.next()) {
                 return resultSet.getDouble("fine_payable");
             } else {
-                return 0.0; // Default value if borrower not found
+                return 0.0; 
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return 0.0; // Default value if an error occurs
+            return 0.0; 
         }
     }
+    
+    
+    public static List<Book> searchByTitle(String title) {
+        return searchBooks("title", title);
+    }
+
+    public static List<Book> searchByAuthor(String author) {
+        return searchBooks("author", author);
+    }
+
+    public static List<Book> searchByISBN(long isbn) {
+        return searchBooks("isbn", String.valueOf(isbn));
+    }
+
+    private static List<Book> searchBooks(String searchType, String searchTerm) {
+        List<Book> books = new ArrayList<>();
+        String query;
+
+        if (searchType.equals("isbn")) {
+            query = "SELECT * FROM books WHERE " + searchType + " = ?::bigint AND status != 'removed'";
+        } else {
+            query = "SELECT * FROM books WHERE " + searchType + " ILIKE ? AND status != 'removed'";
+        }
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            if (searchType.equals("isbn")) {
+                preparedStatement.setString(1, searchTerm);
+            } else {
+                preparedStatement.setString(1, "%" + searchTerm + "%");
+            }
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                long isbn = resultSet.getLong("isbn");
+                int quantity = resultSet.getInt("quantity");
+                UUID uuid = (UUID) resultSet.getObject("uuid");
+                String status = resultSet.getString("status");
+
+                Book book = new Book(title, author, isbn, quantity);
+                book.setId(id);
+                book.setUuid(uuid);
+                book.setStatus(status);
+                books.add(book);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
+    }
+
+
 
 }
 

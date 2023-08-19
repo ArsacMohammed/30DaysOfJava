@@ -13,7 +13,7 @@ CREATE TABLE borrower (
 
 CREATE TABLE books (
     id BIGSERIAL PRIMARY KEY,
-    uuid UUID NOT NULL DEFAULT uuid_generate_v4(), -- Generate a UUID by default
+    uuid UUID NOT NULL DEFAULT uuid_generate_v4(),
     title VARCHAR(255) NOT NULL,
     author VARCHAR(255) NOT NULL,
     isbn BIGINT NOT NULL,
