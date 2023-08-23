@@ -9,7 +9,7 @@ CREATE TABLE borrower (
     fine_payable DECIMAL(10, 2),
     fine_paid BOOLEAN
 );
-
+and
 
 CREATE TABLE books (
     id BIGSERIAL PRIMARY KEY,
