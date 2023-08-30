@@ -4,7 +4,7 @@ public class largest_unique_zoho {
 //you  are  given an array so that largest number is unique by atleast as twice as much the other numbers in the array
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int [] numbers = {1,2,3,6};
+		int [] numbers = {1,2,3,6,5,7};
 		int max=Integer.MIN_VALUE;
 		for (int i=0;i<numbers.length;i++) {
 			if (max<numbers[i]) {
