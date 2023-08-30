@@ -1,18 +1,21 @@
 package main;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+import java.util.UUID;
+
+import dao.BookDAO;
 import dao.DatabaseConnection;
 import model.Book;
 import model.Borrower;
-import model.User;
 import model.Role;
-import java.util.UUID;
-import dao.BookDAO;
+import model.User;
 public class LibrarayManagementSystem {
 	
 	static Scanner in =new Scanner(System.in);
@@ -26,7 +29,7 @@ public class LibrarayManagementSystem {
 	        BookDAO.addUser(defaultAdmin);
 	        System.out.println("Default Admin added !");
 	    } else {
-	        System.out.println("Admin already exists!!");
+	        System.out.println("Welcome to Library Management System!!");
 	    }
 
 	    do {
@@ -586,6 +589,7 @@ public class LibrarayManagementSystem {
 	            System.out.println("Book username must contain only alphabet");
 	        }
 	    }
+	    System.out.println("Enter the password");
 		String password ="";
 		while(password.isEmpty()) {
 			password = in.nextLine();

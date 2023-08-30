@@ -44,82 +44,7 @@ public class BookDAO {
        
 
     
-	public static boolean returnBook(UUID bookUuid, UUID borrowerUuid, Date returnDate) {
-	    Connection connection = null;
-	    PreparedStatement returnStatement = null;
-
-	    try {
-	        connection = DatabaseConnection.getConnection();
-	        connection.setAutoCommit(false); 
-
-	        
-	        String borrowerQuery = "SELECT id, due_date FROM borrower WHERE book_uuid = ? AND uuid = ? AND return_date IS NULL";
-	        PreparedStatement borrowerStatement = connection.prepareStatement(borrowerQuery);
-	        borrowerStatement.setObject(1, bookUuid, Types.OTHER);
-	        borrowerStatement.setObject(2, borrowerUuid, Types.OTHER);
-	        ResultSet borrowerResult = borrowerStatement.executeQuery();
-	        
-	        if (borrowerResult.next()) {
-	            int borrowerId = borrowerResult.getInt("id");
-	            Date dueDate = borrowerResult.getDate("due_date");
-
-	            // Calculate fines if return date is beyond the due date
-	            BigDecimal fineAmount = BigDecimal.ZERO;
-	            if (returnDate.after(dueDate)) {
-	                long daysLate = ChronoUnit.DAYS.between(dueDate.toLocalDate(), returnDate.toLocalDate());
-	                fineAmount = new BigDecimal(daysLate).multiply(new BigDecimal("2"));
-	            }
-
-	            // Update the borrower table with return date and fine information
-	            String updateBorrowerQuery = "UPDATE borrower SET return_date = ?, fine_payable = ?, fine_paid = ? WHERE id = ?";
-	            returnStatement = connection.prepareStatement(updateBorrowerQuery);
-	            returnStatement.setDate(1, new java.sql.Date(returnDate.getTime()));
-	            returnStatement.setBigDecimal(2, fineAmount);
-	            returnStatement.setBoolean(3, false);
-	            returnStatement.setInt(4, borrowerId);
-	            int rowsAffected = returnStatement.executeUpdate();
-
-	            if (rowsAffected > 0) {
-	                
-	                String updateBookQuery = "UPDATE books SET status = 'available', quantity = quantity + 1 WHERE uuid = ?";
-	                PreparedStatement updateBookStatement = connection.prepareStatement(updateBookQuery);
-	                updateBookStatement.setObject(1, bookUuid, Types.OTHER);
-	                updateBookStatement.executeUpdate();
-
-	                connection.commit();
-	                return true;
-	            }
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        if (connection != null) {
-	            try {
-	                connection.rollback(); 
-	            } catch (SQLException rollbackException) {
-	                rollbackException.printStackTrace();
-	            }
-	        }
-	    } finally {
-	        try {
-	            if (returnStatement != null) {
-	                returnStatement.close();
-	            }
-	            if (connection != null) {
-	                connection.setAutoCommit(true); 
-	                connection.close();
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	    return false;
-	}
-
-
-
-
-
-    public static boolean addUser(User user) {   	
+	public static boolean addUser(User user) {   	
     	String query = "";
     	String checkQuery="";
         if (user.getRole() == Role.Librarian) {
@@ -346,7 +271,83 @@ public class BookDAO {
         return searchBooks("author", author);
     }
 
-    public static List<Book> searchByISBN(long isbn) {
+    public static boolean returnBook(UUID bookUuid, UUID borrowerUuid, Date returnDate) {
+	    Connection connection = null;
+	    PreparedStatement returnStatement = null;
+	
+	    try {
+	        connection = DatabaseConnection.getConnection();
+	        connection.setAutoCommit(false); 
+	
+	        
+	        String borrowerQuery = "SELECT id, due_date FROM borrower WHERE book_uuid = ? AND uuid = ? AND return_date IS NULL";
+	        PreparedStatement borrowerStatement = connection.prepareStatement(borrowerQuery);
+	        borrowerStatement.setObject(1, bookUuid, Types.OTHER);
+	        borrowerStatement.setObject(2, borrowerUuid, Types.OTHER);
+	        ResultSet borrowerResult = borrowerStatement.executeQuery();
+	        
+	        if (borrowerResult.next()) {
+	            int borrowerId = borrowerResult.getInt("id");
+	            Date dueDate = borrowerResult.getDate("due_date");
+	
+	            // Calculate fines if return date is beyond the due date
+	            BigDecimal fineAmount = BigDecimal.ZERO;
+	            if (returnDate.after(dueDate)) {
+	                long daysLate = ChronoUnit.DAYS.between(dueDate.toLocalDate(), returnDate.toLocalDate());
+	                fineAmount = new BigDecimal(daysLate).multiply(new BigDecimal("2"));
+	            }
+	
+	            // Update the borrower table with return date and fine information
+	            String updateBorrowerQuery = "UPDATE borrower SET return_date = ?, fine_payable = ?, fine_paid = ? WHERE id = ?";
+	            returnStatement = connection.prepareStatement(updateBorrowerQuery);
+	            returnStatement.setDate(1, new java.sql.Date(returnDate.getTime()));
+	            returnStatement.setBigDecimal(2, fineAmount);
+	            returnStatement.setBoolean(3, false);
+	            returnStatement.setInt(4, borrowerId);
+	            int rowsAffected = returnStatement.executeUpdate();
+	
+	            if (rowsAffected > 0) {
+	                
+	                String updateBookQuery = "UPDATE books SET status = 'available', quantity = quantity + 1 WHERE uuid = ?";
+	                PreparedStatement updateBookStatement = connection.prepareStatement(updateBookQuery);
+	                updateBookStatement.setObject(1, bookUuid, Types.OTHER);
+	                updateBookStatement.executeUpdate();
+	
+	                connection.commit();
+	                return true;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        if (connection != null) {
+	            try {
+	                connection.rollback(); 
+	            } catch (SQLException rollbackException) {
+	                rollbackException.printStackTrace();
+	            }
+	        }
+	    } finally {
+	        try {
+	            if (returnStatement != null) {
+	                returnStatement.close();
+	            }
+	            if (connection != null) {
+	                connection.setAutoCommit(true); 
+	                connection.close();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return false;
+	}
+
+
+
+
+
+
+	public static List<Book> searchByISBN(long isbn) {
         return searchBooks("isbn", String.valueOf(isbn));
     }
 

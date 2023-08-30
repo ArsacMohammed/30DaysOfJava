@@ -16,12 +16,11 @@ public class DatabaseConnection {
 	}
 	
 	 public static void main(String[] args) {
-	        // You can use the getConnection method here
+	        
 	        try {
 	            Connection connection = getConnection();
 	            System.out.println("Connection successful");
-	            // Perform any database operations as needed
-	            // Remember to close the connection when done
+
 	            connection.close();
 	        } catch (SQLException e) {
 	            e.printStackTrace();
