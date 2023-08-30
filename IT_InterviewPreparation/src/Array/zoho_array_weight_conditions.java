@@ -1,5 +1,5 @@
 package Array;
-import java.util.*;
+
 public class zoho_array_weight_conditions {
 
 	public static void main(String[] args) {
