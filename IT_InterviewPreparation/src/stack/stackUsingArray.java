@@ -10,11 +10,15 @@ public class stackUsingArray {
         s.push(6);
         s.push(3);
         s.push(7);
+        s.push(5);
+        s.push(10);
+        s.push(11);
         System.out.println("Top of the stack before deleting any element " + s.top());
         System.out.println("Size of the stack before deleting any element " + s.size());
-        System.out.println("The element deleted is " + s.pop());
+//        System.out.println("The element deleted is " + s.pop());
         System.out.println("Size of the stack after deleting an element " + s.size());
         System.out.println("Top of the stack after deleting an element " + s.top());
+        System.out.println(s.isFull());
     }
 }
 class stack {
@@ -35,5 +39,12 @@ class stack {
     }
     int size() {
         return top + 1;
+    }
+    
+    boolean isFull() {
+    	if (top== size-1) {
+    		return true;
+    	}
+    	return false;
     }
 }
